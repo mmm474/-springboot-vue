@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="btn1">获取用户信息</button>
+  <button id="btn2">登陆</button>
+  <button id="btn3">注册</button>
+  <button id="btn4">获取列表</button>
+  <button id="btn6">搜索用户</button>
+  <button id="btn7">新增商品</button>
+  <button id="btn8">下单</button>
+  <!-- 多选 -->
+  <input type="file" id="file" multiple>
+  <button id="btn5">提交</button>
+</body>
+<script>
+  let token = null
+  const btn1 = document.getElementById('btn1')
+  const btn2 = document.getElementById('btn2')
+  const btn3 = document.getElementById('btn3')
+  const btn4 = document.getElementById('btn4')
+  const btn5 = document.getElementById('btn5')
+  const btn6 = document.getElementById('btn6')
+  const btn7 = document.getElementById('btn7')
+  const btn8 = document.getElementById('btn8')
+  const fileBtn = document.getElementById('file')
+  let files = []
+  fileBtn.addEventListener('change', (e) => {
+    files.push(e.target.files[0])
+    console.log('file---', files)
+  })
+  btn1.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/user/search?userId=${1}', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      }
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+  })
+  btn2.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: '123456',
+        password: 123456
+      })
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+      token = res.data.token
+    })
+  })
+  btn3.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: '123',
+        password: 123
+      })
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+
+  })
+  btn4.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/goods/getGoodsList?page=1&pageSize=10', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+  })
+
+
+  btn5.addEventListener('click', () => {
+    const formData = new FormData()
+    for (var i = 0; i < files.length; i++) {
+      formData.append('files', files[i]); // 将文件添加到FormData对象中
+    }
+    formData.append('name', '一斤笨蛋'); // 添加其他字段
+    formData.append('price', '300块'); // 添加其他字段
+    formData.append('description', '真的很好吃'); // 添加其他字段
+    formData.append('category', '1'); // 添加其他字段
+    fetch('http://localhost:8080/api/goods/addGoods', {
+      method: 'POST',
+      headers: {
+        'token': token
+      },
+      body: formData
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+  })
+  btn6.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/user/search?userId=1', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+  })
+
+  // 新增商品
+  btn7.addEventListener('click', () => {
+    const formData = new FormData()
+    formData.append('files', files[0]); // 将文件添加到FormData对象中
+    formData.append('name', '一斤笨蛋'); // 添加其他字段
+    formData.append('price', '300块'); // 添加其他字段
+    formData.append('descr', '真的很好吃'); // 添加其他字段
+    formData.append('categoryId', '1'); // 添加其他字段
+    formData.append('specials', '很香'); // 添加其他字段
+    formData.append('unit', '斤'); // 添加其他字段
+    formData.append('store', '10'); // 添加其他字段
+    console.log('formData---', formData)
+    fetch('http://localhost:8080/api/goods/addGoods', {
+      method: 'POST',
+      headers: {
+        'token': token
+      },
+      body: formData
+    }).then(res => res.json()).then(res => {
+      console.log('----', res)
+    })
+  })
+  // 下单
+  btn8.addEventListener('click', () => {
+    fetch('http://localhost:8080/api/order/addOrder', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': token
+      },
+      body: JSON.stringify({
+        goods: [
+          {
+            id: 1,
+            count: 2
+          }
+        ]
+      })
+    }).then(res => res.json()).then(res => {
+      console.log('res---', res)
+    })
+  })  
+</script>
+
+</html>
