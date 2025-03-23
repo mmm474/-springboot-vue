@@ -1,5 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm"
-
+import { Goods } from "./goods.entity"
+import { Remark } from "./remark.entity"
+import { Likes } from "./like.entity"
+import { Friend } from "./friend.entity"
+import { Step } from "./step.entity"
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -32,21 +36,33 @@ export class User {
 
   // 电话
   @Column({ type: "varchar", default: "", length: 255 })
-  phone!: string
+  phone?: string
 
   // 日期
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  created_at!: Date
+  created_at?: Date
 
-  // @OneToMany(() => Goods, (goods) => goods.user)
-  // goods!: Goods[]
+  // 性别
+  @Column({ type: "int", default: 0 })
+  sex?: number
 
-  // @OneToMany(() => Categories, (categories) => categories.user)
-  // categories!: Categories[]
+  // 简介
+  @Column({ type: "varchar", default: "", length: 255 })
+  describes?: string
 
-  // @OneToMany(() => Order, (order) => order.user)
-  // orders!: Order[]
+  @OneToMany(() => Goods, (goods) => goods.user)
+  goods!: Goods[]
 
-  // @OneToMany(() => Notice, (notice) => notice.user)
-  // notices!: Notice[]
+  @OneToMany(() => Remark, (remark) => remark.user)
+  remarks!: Remark[]
+
+  @OneToMany(() => Likes, (likes) => likes.user)
+  likes!: Likes[]
+
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friends!: Friend[]
+
+  @OneToMany(() => Step, (step) => step.user)
+  steps!: Step[]
+
 }

@@ -1,6 +1,6 @@
 import { Request } from "express";
 
-export interface UInfo{
+export interface UInfo {
   iat: number;
   exp: number;
   username: string;
@@ -8,6 +8,7 @@ export interface UInfo{
 }
 
 interface uFile {
+  path: any;
   filePath: string;
 }
 
@@ -15,7 +16,7 @@ declare global {
   namespace Express {
     interface Request {
       uInfo?: UInfo; // 或者使用更具体的类型
-      file:uFile
+      file: uFile
     }
   }
 }

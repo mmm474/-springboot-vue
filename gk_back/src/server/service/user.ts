@@ -43,16 +43,17 @@ class UserService {
   }
 
   // 更新用户信息
-  async updateUserInfo(userId: number, nickname: string, avatar: string, phone: string) {
+  async updateUserInfo(userId: number, nickname: string, avatar: string, phone: string, sex: number, describes: string) {
     const user = await AppDataSource.getRepository(User).findOneBy({ id: userId })
     if (!user) {
       return { code: 201, success: false, msg: "用户不存在" }
     }
-    await AppDataSource.getRepository(User).update({ id: userId }, { nickname, avatar, phone })
+    await AppDataSource.getRepository(User).update({ id: userId }, { nickname, avatar, phone, sex, describes })
+    const userInfo = { ...user, username: '', password: '', id: user.id, nickname, avatar, phone, sex, describes }
     // 更新token
-    const token = jwt.sign({ ...user, username: '', password: '', id: user.id, nickname, avatar, phone }, TOKEN_SECRET_KEY, { expiresIn: TOKEN_EXPIRES_TIME })
+    const token = jwt.sign(userInfo, TOKEN_SECRET_KEY, { expiresIn: TOKEN_EXPIRES_TIME })
 
-    return { success: true, msg: "更新成功", code: 200, data: { token } }
+    return { success: true, msg: "更新成功", code: 200, data: { token, userInfo } }
   }
 
   // 修改密码

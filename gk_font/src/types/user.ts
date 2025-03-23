@@ -1,21 +1,21 @@
 // 仓库数据类型
 export type Uinfo = {
-  info_id?: number | null,
+  user_code?: string,
   id?: number,
-  birth?: string | null
+  // birth?: string | null
   sex?: number | null,
   nickname?: string | null,
   describes?: string | null,
   avatar?: string,
   role?: string,
-  createdTime?: string,
+  created_at?: string,
   iat?: number,
   exp?: number
 }
 
 export interface UserState {
   token: string | null
-  UInfo: Uinfo
+  UInfo: Uinfo | null
 }
 
 
@@ -37,29 +37,26 @@ export type loginResponseForm = {
 
 // 获取用户信息接口返回参数类型
 export type getUserInfoForm = {
-  userInfo: {
-    info_id?: number | null,
-    id?: number,
-    birt?: string | null
-    sex?: number | null,
-    uname?: string | null,
-    describes?: string | null,
-    avatar?: string,
-    role?: string,
-    createdTime?: string,
-    iat?: number,
-    exp?: number
-  }
+  user_code: string,
+  id?: number,
+  // birth?: string | null
+  sex?: number | null,
+  nickname?: string | null,
+  describes?: string | null,
+  avatar?: string,
+  role?: string,
+  created_at?: string,
+  iat?: number,
+  exp?: number
 }
 
 // 更新用户信息接口参数类型
 export interface upInfoRequestForm {
-  id: number
-  birt?: string | null
-  sex?: number | null,
-  uname?: string | null,
-  describes?: string | null,
-  file?: string,
+  sex?: number,
+  nickname?: string,
+  describes?: string,
+  files?: string,
+  phone?: string
 }
 
 

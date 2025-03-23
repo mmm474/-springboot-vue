@@ -3,10 +3,10 @@
     <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">个人中心</view>
     <view class="info_box">
       <view class="avatar_box">
-        <image src="" />
+        <image :src="userStore.UInfo?.avatar" />
         <view class="brief">
-          <text>{{ '用户' }}</text>
-          <text>{{ "此人还没有简介~~~" }}</text>
+          <text>{{ userStore.UInfo?.nickname }}</text>
+          <text>{{ userStore.UInfo?.describes || "此人还没有简介~~~" }}</text>
         </view>
       </view>
       <text style="color: #ccc;" class="iconfont icon-bianji" @click="editInfo">编辑资料></text>
@@ -19,12 +19,12 @@
 
       <view class="item">
         <image src="../../static/user/work.png" mode="scaleToFill" @click="goWorks" />
-        <text>我的作品</text>
+        <text>我的商品</text>
       </view>
 
       <view class="item">
-        <image src="../../static/user/friend.png" mode="scaleToFill" />
-        <text>我的朋友</text>
+        <image src="../../static/user/friend.png" mode="scaleToFill" @click="goFriend" />
+        <text>我的关注</text>
       </view>
     </view>
     <view class="title">足迹</view>
@@ -32,10 +32,10 @@
       <scroll-view scroll-x style="height: 250rpx; width: 100%;">
         <view style="width: 300%;height: 100%;">
           <view class="scoll">
-            <view class="scoll_item" v-for="item in Data.list" :key="item.history_id" @click="goLesion(item.lesion)">
-              <image :src="item.lesion.cover" mode="scaleToFill" v-if="item.lesion.cover" />
-              <div v-if="!item.lesion.cover" class="blank"></div>
-              <text>{{ item.lesion.title }}</text>
+            <view class="scoll_item" v-for="item in data.list" :key="item.history_id" @click="goDetail(item)">
+              <image :src="item.cover" mode="scaleToFill" v-if="item.cover" />
+              <div v-if="!item.cover" class="blank"></div>
+              <text>{{ item.title }}</text>
             </view>
           </view>
         </view>
@@ -61,42 +61,43 @@
 <script setup lang='ts'>
 import { onMounted, ref, reactive } from 'vue';
 import useUserStore from '@/store/module/user';
-
+import { reqGetUserStep } from '@/api/square';
+import { onShow } from '@dcloudio/uni-app';
 const userStore = useUserStore()
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
-
-const Data = reactive<{ list: any[] }>(
+const data = reactive<{ list: any[] }>(
   {
     list: []
   }
 )
 
-onMounted(() => {
+
+onShow(() => {
   getInfo()
   getRecords()
 })
 
 const getRecords = async () => {
+  const res = await reqGetUserStep()
+  data.list = res.data
+}
 
+const goDetail = (item: any) => {
+  uni.navigateTo({
+    url: `/pages/detail/index?id=${item.goodid}`
+  })
 }
 
 const getInfo = async () => {
   await userStore.userInfo()
 }
 
-const goLesion = (item) => {
-  // const queryString = JSON.stringify(item)
-  // uni.setStorageSync('item', queryString)
-  // uni.navigateTo({
-  //   url: `/pages/lesion/index?`
-  // })
-}
-
 const goLikes = () => {
-  // uni.redirectTo({
-  //   url: '/pages/likes/index'
-  // })
+  console.log('22222')
+  uni.redirectTo({
+    url: '/pages/likes/index'
+  })
 }
 
 const goLogin = () => {
@@ -122,6 +123,12 @@ const editInfo = () => {
 const goWorks = () => {
   uni.redirectTo({
     url: '/pages/works/index'
+  })
+}
+
+const goFriend = () => {
+  uni.redirectTo({
+    url: '/pages/friend/index'
   })
 }
 </script>

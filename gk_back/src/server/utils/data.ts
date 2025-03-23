@@ -1,16 +1,21 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { User } from "../entity/user.entity"
+import { Goods } from "../entity/goods.entity"
+import { Remark } from "../entity/remark.entity"
+import { Likes } from "../entity/like.entity"
+import { Friend } from "../entity/friend.entity"
+import { Step } from "../entity/step.entity"
 
 // 实体
-const ENTITY = [User]
+const ENTITY = [User, Goods, Remark, Likes, Friend, Step]
 
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: "localhost",
   port: 3306,
   username: "root",
-  password: "12345678",
+  password: "1111",
   database: "second_trade",
   synchronize: true,
   entities: ENTITY,

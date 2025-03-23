@@ -7,7 +7,9 @@ import './socket'
 
 // 路由
 import userRouter from "./router/user";
-
+import goodsRouter from "./router/goods";
+import toolsRouter from "./router/tools";
+import friendRouter from "./router/friend";
 import { AppDataSource } from "./utils/data";
 // 服务器
 import { port, host } from "../config/serve";
@@ -33,6 +35,9 @@ app.use(
 // 解析json
 app.use(express.json());
 app.use('/api/user', userRouter)
+app.use('/api/goods', goodsRouter)
+app.use('/api/tools', toolsRouter)
+app.use('/api/friend', friendRouter)
 
 ViteExpress.listen(app, parseInt(port + ''), () => {
   AppDataSource.initialize()
