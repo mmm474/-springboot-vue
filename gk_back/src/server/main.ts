@@ -16,7 +16,13 @@ import { port, host } from "../config/serve";
 
 const app = express();
 // 允许跨域
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true,
+}));
+
+
+
 app.use('/static', express.static(path.resolve(process.cwd(), 'src/static')))
 // 允许接受formdata
 app.use(express.urlencoded({ extended: false }));
