@@ -36,18 +36,10 @@ let useUserStore = defineStore("user", {
 
     // 退出
     async userLogout() {
-      let result = await reqLogout()
-      if (result.success) {
-        // 清空token和本地缓存
-        removeToken()
-        removeInfo()
-        this.token = ""
-        this.UInfo = null
-        return result.msg
-      }
-      else {
-        return Promise.reject(new Error(result.msg))
-      }
+      removeToken()
+      removeInfo()
+      this.token = ""
+      this.UInfo = null
     },
     // 更新用户信息接口
     async userUpInfo(data: upInfoRequestForm, filePath?: string) {

@@ -2,7 +2,7 @@
   <view class="container">
     <!-- 商品标题 -->
     <view class="title-section">
-      <text class="title" >{{data.info.title}}</text>
+      <text class="title">{{ data.info.title }}</text>
     </view>
     <!-- 发布者信息 -->
     <view class="publisher-section">
@@ -11,10 +11,10 @@
         <text class="publisher-name">{{ data.info.user.nickname }}</text>
       </view>
       <view class="add-friend-btn">
-        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary" text="关注"
-          @click="addFriend"></up-button>
-        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && data.isFriend" class="btn" type="error" text="取消关注"
-          @click="delFriend"></up-button>
+        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary"
+          text="关注" @click="addFriend"></up-button>
+        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && data.isFriend" class="btn" type="error"
+          text="取消关注" @click="delFriend"></up-button>
       </view>
     </view>
     <!-- 商品详情 -->
@@ -35,7 +35,10 @@
             <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
           </view> -->
         </view>
-        <up-button type="primary" class="order-btn" @click="handleOrder">立即下单</up-button>
+        <view class="order-btn">
+          <up-button type="primary" @click="handleOrder">立即下单</up-button>
+        </view>
+
       </view>
       <!-- 留言区域 -->
       <view class="comment-section">
@@ -50,29 +53,29 @@
             <view class="comment-content">
               <text class="comment-username">{{ comment?.nickname }}</text>
               <text class="comment-text">{{ comment?.content }}</text>
-              <text class="comment-time">{{differTime(comment?.created_at)}}</text>
+              <text class="comment-time">{{ differTime(comment?.created_at) }}</text>
             </view>
           </view>
         </view>
       </view>
 
       <up-popup :show="options.pop_flag" mode="bottom" @close="closePop" class="pop_box">
-      <view
-        style="width: 100vw;height: 400rpx;  display: flex;align-items: center;justify-content: center;flex-direction: column;padding-top: 24rpx;">
-        <textarea v-model="data.contnet" name="" id="" cols="30" rows="10"
-          style="background-color:#eee;width: 90%;padding: 20rpx;"></textarea>
-        <view style="width: 90%;margin-top: 20rpx;">
-          <up-button @click="sendMark" type="primary" text="发送"></up-button>
+        <view
+          style="width: 100vw;height: 400rpx;  display: flex;align-items: center;justify-content: center;flex-direction: column;padding-top: 24rpx;">
+          <textarea v-model="data.contnet" name="" id="" cols="30" rows="10"
+            style="background-color:#eee;width: 90%;padding: 20rpx;"></textarea>
+          <view style="width: 90%;margin-top: 20rpx;">
+            <up-button @click="sendMark" type="primary" text="发送"></up-button>
+          </view>
         </view>
-      </view>
-    </up-popup>
+      </up-popup>
 
-    <u-toast ref="uToastRef"></u-toast>
+      <u-toast ref="uToastRef"></u-toast>
 
       <view class="input_box">
-          <view @click="options.pop_flag = true"></view>
-          <text style="font-size: 48rpx;" v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
-          <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
+        <view @click="options.pop_flag = true"></view>
+        <text style="font-size: 48rpx;" v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
+        <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
       </view>
     </scroll-view>
   </view>
@@ -154,7 +157,7 @@ const getInfo = async () => {
     id: data.articl_id
   }
   let res = await reqGetDetail(query)
-  console.log('2312312',res)
+  console.log('2312312', res)
   if (res.code == 200) {
     // @ts-ignore
     data.info = res.data
@@ -461,7 +464,7 @@ const differTime = (time: string) => {
   display: flex;
   margin-bottom: 30rpx;
   margin-top: 20px;
-  
+
 
 }
 
@@ -520,7 +523,4 @@ const differTime = (time: string) => {
   color: #999999;
   display: block;
 }
-
-
 </style>
-  

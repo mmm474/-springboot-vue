@@ -107,7 +107,7 @@ const goLogin = () => {
 }
 
 const Logout = async () => {
-  // await userStore.userLogout()
+  await userStore.userLogout()
   uni.redirectTo({
     url: '/pages/login/index'
   })
