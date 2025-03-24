@@ -27,7 +27,7 @@
       :refresher-triggered="isRefreshing">
       <view v-if="data.list.length > 0" v-for="(item, index) in data.list" :key="index" class="goods-item"
         @tap="goToDetail(item.id)">
-        <image class="goods-image" :src="item.image" mode="aspectFill"></image>
+        <image class="goods-image" :src="item.cover" mode="aspectFill"></image>
         <view class="goods-info">
           <text class="goods-title">{{ item.title }}</text>
           <text class="goods-author">{{ item.user.nickname }}</text>
@@ -277,5 +277,6 @@ page {
   font-weight: bold;
   margin-top: 8rpx;
 }
+
 </style>
 

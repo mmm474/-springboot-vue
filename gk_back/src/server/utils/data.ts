@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
   host: "localhost",
   port: 3306,
   username: "root",
-  password: "1111",
+  password: "12345678",
   database: "second_trade",
   synchronize: true,
   entities: ENTITY,

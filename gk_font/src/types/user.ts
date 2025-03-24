@@ -76,7 +76,7 @@ export type userInfo = {
 }
 
 export interface upInfoResponseForm extends reponseForm {
-  newtoken: string
+  token: string
   userInfo: userInfo,
   message: string,
   succes: boolean,

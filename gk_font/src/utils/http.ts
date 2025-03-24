@@ -51,8 +51,17 @@ export const request = <T>(options: UniApp.RequestOptions) => {
         if (res.statusCode >= 200 && res.statusCode <= 300) {
           resolve(res.data as Data<T>)
         } else if (res.statusCode == 401) {
+          // 提示
+          uni.showToast({
+            icon: "none",
+            title: "登录过期，请重新登录",
+          })
           // 清理用户信息,token，跳转登录页面
           reject(res)
+          removeInfo()
+          uni.redirectTo({
+            url: '/pages/login/index'
+          })
         }
         // 其他错误
         else {

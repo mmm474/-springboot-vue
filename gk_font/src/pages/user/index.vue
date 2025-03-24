@@ -27,8 +27,8 @@
         <text>我的关注</text>
       </view>
     </view>
-    <view class="title">足迹</view>
-    <view class="history_box">
+    <view v-if="data.list.length > 0" class="title">足迹</view>
+    <view v-if="data.list.length > 0" class="history_box">
       <scroll-view scroll-x style="height: 250rpx; width: 100%;">
         <view style="width: 300%;height: 100%;">
           <view class="scoll">
@@ -107,7 +107,7 @@ const goLogin = () => {
 }
 
 const Logout = async () => {
-  // await userStore.userLogout()
+  await userStore.userLogout()
   uni.redirectTo({
     url: '/pages/login/index'
   })
