@@ -48,7 +48,16 @@ class UserService {
     if (!user) {
       return { code: 201, success: false, msg: "用户不存在" }
     }
-    await AppDataSource.getRepository(User).update({ id: userId }, { nickname, avatar, phone, sex, describes })
+    if (nickname) {
+      console.log('sdsadsadas')
+    }
+    await AppDataSource.getRepository(User).update({ id: userId }, {
+      nickname,
+      avatar,
+      phone,
+      sex,
+      describes
+    })
     const userInfo = { ...user, username: '', password: '', id: user.id, nickname, avatar, phone, sex, describes }
     // 更新token
     const token = jwt.sign(userInfo, TOKEN_SECRET_KEY, { expiresIn: TOKEN_EXPIRES_TIME })

@@ -55,7 +55,7 @@ let useUserStore = defineStore("user", {
       console.log(result)
       if (result?.code === 200) {
         this.UInfo = result.data.userInfo
-        this.token = result.data.newtoken
+        this.token = result.data.token
         setToken(this.token as string)
         setInfo(this.UInfo)
         console.log(this.UInfo.avatar)

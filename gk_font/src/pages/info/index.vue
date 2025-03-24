@@ -73,7 +73,7 @@
 </template>
 
 <script lang="ts" setup>
-
+import { onShow } from '@dcloudio/uni-app';
 import useUserStore from '@/store/module/user';
 const userStore = useUserStore()
 import { ref } from 'vue';
@@ -83,12 +83,20 @@ const sex = ref('0');
 const describes = ref('');
 const phone = ref('444');
 const files = ref<File>();
-
+const upVal = ref('');
 const genderOptions = [
-  { label: '男', value: 0 },
-  { label: '女', value: 1 },
-  { label: '保密', value: -1 }
+  { label: '男', value: '0' },
+  { label: '女', value: '1' },
+  { label: '保密', value: '-1' }
 ];
+
+onShow(() => {
+  avatar.value = userStore.UInfo?.avatar
+  nickname.value = userStore.UInfo?.nickname || ''
+  sex.value = userStore.UInfo?.sex.toString()
+  describes.value = userStore.UInfo?.describes || ''
+  phone.value = userStore.UInfo?.phone || ''
+})
 
 const goBack = () => {
   uni.navigateBack();
@@ -96,14 +104,20 @@ const goBack = () => {
 
 const handleSave = async () => {
   console.log(files.value, nickname.value, sex.value, describes.value, phone.value)
+  if (nickname.value === '') {
+    uni.showToast({
+      title: '请输入昵称',
+      icon: 'error'
+    });
+    return;
+  }
   const query = {
     nickname: nickname.value,
     sex: parseInt(sex.value),
     describes: describes.value,
     phone: phone.value
   }
-  const res = await userStore.userUpInfo(query, avatar.value)
-  console.log(res)
+  const res = await userStore.userUpInfo(query, upVal.value)
   uni.showToast({
     title: '保存成功',
     icon: 'success'
@@ -118,7 +132,11 @@ const changeAvatar = () => {
         files.value = res.tempFiles[0] as File;
       }
       avatar.value = res.tempFilePaths[0];
-    }
+      upVal.value = res.tempFilePaths[0];
+    },
+    fail: (fail) => {
+      console.log(fail)
+    },
   });
 };
 

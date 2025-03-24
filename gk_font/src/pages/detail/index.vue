@@ -2,13 +2,13 @@
   <view class="container">
     <!-- 商品标题 -->
     <view class="title-section">
-      <text class="title" @click="test">121256125</text>
+      <text class="title" >{{data.info.title}}</text>
     </view>
     <!-- 发布者信息 -->
     <view class="publisher-section">
       <view class="publisher-info">
-        <!-- <image class="avatar" :src="data.info.user.avatar" mode="aspectFill"></image>
-        <text class="publisher-name">{{ data.info.user.nickname }}</text> -->
+        <image class="avatar" :src="data.info.user.avatar" mode="aspectFill"></image>
+        <text class="publisher-name">{{ data.info.user.nickname }}</text>
       </view>
       <view class="add-friend-btn">
         <up-button v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary" text="关注"
@@ -30,34 +30,51 @@
       <view class="price-section">
         <view class="left-section">
           <text class="price">¥ {{ data.info.price }}</text>
-          <view class="like-btn">
-            <text v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
-            <text style="color: #ccc;" v-else class="iconfont icon--like-in" @click="onLike"></text>
-          </view>
+          <!-- <view class="like-btn">
+            <text style="font-size: 48rpx;" v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
+            <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
+          </view> -->
         </view>
-        <uni-button type="primary" class="order-btn" @click="handleOrder">立即下单</uni-button>
+        <up-button type="primary" class="order-btn" @click="handleOrder">立即下单</up-button>
       </view>
       <!-- 留言区域 -->
       <view class="comment-section">
         <text class="comment-title">留言区</text>
         <view class="comment-input-area">
-          <input type="text" v-model="data.contnet" placeholder="说点什么..." class="comment-input" />
-          <up-button type="primary">发送</up-button>
+          <!-- <input type="text" v-model="data.contnet" placeholder="说点什么..." class="comment-input" />
+          <up-button type="primary">发送</up-button> -->
         </view>
         <view class="comment-list">
           <view v-for="(comment, index) in data.info.remarks" :key="index" class="comment-item">
-            <image :src="comment.avatar" class="comment-avatar" mode="aspectFill"></image>
+            <image :src="comment?.avatar" class="comment-avatar" mode="aspectFill"></image>
             <view class="comment-content">
-              <text class="comment-username">{{ comment.user.nickname }}</text>
-              <text class="comment-text">{{ comment.content }}</text>
-              <text class="comment-time">{{ comment.created_at }}</text>
+              <text class="comment-username">{{ comment?.nickname }}</text>
+              <text class="comment-text">{{ comment?.content }}</text>
+              <text class="comment-time">{{differTime(comment?.created_at)}}</text>
             </view>
           </view>
         </view>
       </view>
-    </scroll-view>
+
+      <up-popup :show="options.pop_flag" mode="bottom" @close="closePop" class="pop_box">
+      <view
+        style="width: 100vw;height: 400rpx;  display: flex;align-items: center;justify-content: center;flex-direction: column;padding-top: 24rpx;">
+        <textarea v-model="data.contnet" name="" id="" cols="30" rows="10"
+          style="background-color:#eee;width: 90%;padding: 20rpx;"></textarea>
+        <view style="width: 90%;margin-top: 20rpx;">
+          <up-button @click="sendMark" type="primary" text="发送"></up-button>
+        </view>
+      </view>
+    </up-popup>
 
     <u-toast ref="uToastRef"></u-toast>
+
+      <view class="input_box">
+          <view @click="options.pop_flag = true"></view>
+          <text style="font-size: 48rpx;" v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
+          <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
+      </view>
+    </scroll-view>
   </view>
 </template>
 <script setup lang='ts'>
@@ -137,6 +154,7 @@ const getInfo = async () => {
     id: data.articl_id
   }
   let res = await reqGetDetail(query)
+  console.log('2312312',res)
   if (res.code == 200) {
     // @ts-ignore
     data.info = res.data
@@ -260,8 +278,54 @@ const downLike = async () => {
 const closePop = () => {
   options.pop_flag = false
 }
+
+const differTime = (time: string) => {
+  const currentTime = new Date();
+  const targetTime = new Date(time);
+
+  console.log(currentTime, targetTime);
+
+  // @ts-ignore
+  const differenceInMilliseconds = currentTime - targetTime;
+  const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+  const differenceInHours = Math.floor(differenceInMinutes / 60);
+
+  if (differenceInHours < 1) {
+    return `${differenceInMinutes}分钟前`;
+  } else {
+    return `${differenceInHours}小时前`;
+  }
+};
 </script>
-<style scoped>
+<style scoped lang="scss">
+.input_box {
+  height: 145rpx;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 30rpx;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  // background-color: red;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  justify-content: space-around;
+  border-top: 1px solid #eee;
+
+  view {
+    height: 60rpx;
+    background-color: #eee;
+    width: 80%;
+    border-radius: 10rpx;
+  }
+
+  text {
+    color: red;
+    font-size: 40rpx;
+  }
+}
+
 .container {
   height: 100%;
   display: flex;
@@ -361,6 +425,7 @@ const closePop = () => {
   display: flex;
   align-items: center;
   gap: 10rpx;
+
 }
 
 .like-count {
@@ -379,6 +444,7 @@ const closePop = () => {
 }
 
 .comment-section {
+  padding-bottom: 80rpx;
   margin-top: 20rpx;
   padding: 30rpx;
   background-color: #ffffff;
@@ -394,6 +460,9 @@ const closePop = () => {
 .comment-input-area {
   display: flex;
   margin-bottom: 30rpx;
+  margin-top: 20px;
+  
+
 }
 
 .comment-input {
@@ -411,6 +480,7 @@ const closePop = () => {
 }
 
 .comment-list {
+  margin-bottom: 150px;
   padding-top: 20rpx;
 }
 
@@ -450,5 +520,7 @@ const closePop = () => {
   color: #999999;
   display: block;
 }
+
+
 </style>
   

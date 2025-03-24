@@ -28,6 +28,7 @@ export const reqLogout = () => request<reponseForm>({ method: "GET", url: API.US
 
 // 更新用户信息
 export const reqUpInfo = (data: upInfoRequestForm, filePath?: string,) => {
+  console.log('file-----', filePath)
   if (filePath) {
     return upload<upInfoResponseForm>({
       // @ts-ignore
