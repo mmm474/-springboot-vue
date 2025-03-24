@@ -34,13 +34,16 @@ userRouter.get("/search", AuthToken, async (req, res) => {
 
   res.send(await UserService.searchUser(parseInt(userId as string)))
 })
-
+// C:\Users\MECHREVO\Desktop\second-hand-trading-platform\gk_back\src\static\image\1742631559532_iLPHjp4qaCzWd9de3f4c2cc7e9717e59810e8717ab26.jpg
 // 修改用户信息
 userRouter.post("/updateInfo", AuthToken, uploads.array('files', 10), async (req, res) => {
-  const avatar = Array.from(req.files as Express.Multer.File[]).map(i => i.path.replace(process.cwd() + '/src', `${host}:${port}`))[0]
+  console.log(req.files)
+  console.log('路径--', process.cwd())
+  const avatar = Array.from(req.files as Express.Multer.File[]).map(i => i.path)[0]
+  console.log(avatar)
   const userId = req.uInfo?.id;
-  const { nickname, phone } = req.body;
-  res.send(await UserService.updateUserInfo(parseInt(userId as string), nickname, avatar, phone))
+  const { nickname, phone, sex, describes } = req.body;
+  res.send(await UserService.updateUserInfo(parseInt(userId as string), nickname, avatar, phone, sex, describes))
 })
 
 // 修改密码

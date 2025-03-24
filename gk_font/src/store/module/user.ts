@@ -27,8 +27,8 @@ let useUserStore = defineStore("user", {
     async userInfo() {
       let result = await reqUserInfo()
       if (result.code == 200) {
-        this.UInfo = result.data.userInfo
-        setInfo(result.data.userInfo)
+        this.UInfo = result.data
+        setInfo(result.data)
         return result.msg
       }
       return Promise.reject(new Error(result.msg))
@@ -42,7 +42,7 @@ let useUserStore = defineStore("user", {
         removeToken()
         removeInfo()
         this.token = ""
-        this.UInfo = {}
+        this.UInfo = null
         return result.msg
       }
       else {
@@ -59,7 +59,6 @@ let useUserStore = defineStore("user", {
         setToken(this.token as string)
         setInfo(this.UInfo)
         console.log(this.UInfo.avatar)
-      } else {
       }
     },
   },

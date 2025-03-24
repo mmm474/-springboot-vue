@@ -11,31 +11,76 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "uni-app"
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "首页"
       }
     },
     {
       "path": "pages/login/index",
       "style": {
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "登录"
       }
     },
     {
       "path": "pages/reg/index",
       "style": {
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "注册"
       }
     },
     {
       "path": "pages/user/index",
       "style": {
-        "navigationStyle": "custom"
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "用户中心"
       }
     },
     {
       "path": "pages/info/index",
       "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": ""
+      }
+    },
+    {
+      "path": "pages/square/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "社区广场"
+      }
+    },
+    {
+      "path": "pages/share/index",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "发布"
+      }
+    },
+    {
+      "path": "pages/detail/index",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "详情"
+      }
+    },
+    {
+      "path": "pages/likes/index",
+      "style": {
         "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/works/index",
+      "style": {
+        "navigationBarTextStyle": "black"
+      }
+    },
+    {
+      "path": "pages/friend/index",
+      "style": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "我的关注"
       }
     }
   ],
@@ -56,12 +101,12 @@
         "selectedIconPath": "static/home_active.png",
         "text": "首页"
       },
-      // {
-      // 	"pagePath": "pages/square/index",
-      // 	"iconPath": "static/square.png",
-      // 	"selectedIconPath": "static/square_active.png",
-      // 	"text": "社区"
-      // },
+      {
+        "pagePath": "pages/square/index",
+        "iconPath": "static/square.png",
+        "selectedIconPath": "static/square_active.png",
+        "text": "社区"
+      },
       {
         "pagePath": "pages/user/index",
         "iconPath": "static/user.png",

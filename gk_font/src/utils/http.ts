@@ -9,7 +9,6 @@ const baseUrl = "http://127.0.0.1:8080/api"
 // 拦截器
 const httpInterceptor = {
   invoke(options: UniApp.RequestOptions) {
-    console.log(options)
     // 如果已经是完整路径
     if (!options.url.startsWith("httP")) {
       options.url = baseUrl + options.url
@@ -49,7 +48,6 @@ export const request = <T>(options: UniApp.RequestOptions) => {
       ...options,
       // 响应成功
       success(res) {
-        console.log('22222', res)
         if (res.statusCode >= 200 && res.statusCode <= 300) {
           resolve(res.data as Data<T>)
         } else if (res.statusCode == 401) {
