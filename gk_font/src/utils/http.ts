@@ -4,7 +4,8 @@ import { removeInfo } from "./info"
 
 // const baseUrl = "http://81.71.18.107:9094/api"
 
-const baseUrl = "http://127.0.0.1:8080/api"
+// const baseUrl = "http://127.0.0.1:8080/api"
+const baseUrl = "http://120.26.146.156:9898/api"
 
 // 拦截器
 const httpInterceptor = {

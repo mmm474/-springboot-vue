@@ -12,23 +12,26 @@
       <text style="color: #ccc;" class="iconfont icon-bianji" @click="editInfo">编辑资料></text>
     </view>
     <view class="case_box">
-      <view class="item">
-        <image src="../../static/user/love.png" mode="scaleToFill" @click="goLikes" />
+      <view class="item" @click="goLikes">
+        <!-- <image src="../../static/user/love.png" mode="scaleToFill" @click="goLikes" /> -->
+        <text class="iconfont icon-guanzhu" style="font-size: 60rpx;color: #1afa29;"></text>
         <text>我的收藏</text>
       </view>
 
-      <view class="item">
-        <image src="../../static/user/work.png" mode="scaleToFill" @click="goWorks" />
+      <view class="item" @click="goWorks">
+        <!-- <image src="../../static/user/work.png" mode="scaleToFill" @click="goWorks" /> -->
+        <text class="iconfont icon-zuopinji" style="font-size: 60rpx;color: #1afa29;"></text>
         <text>我的商品</text>
       </view>
 
-      <view class="item">
-        <image src="../../static/user/friend.png" mode="scaleToFill" @click="goFriend" />
+      <view class="item" @click="goFriend">
+        <!-- <image src="../../static/user/friend.png" mode="scaleToFill" @click="goFriend" /> -->
+        <text class="iconfont  icon-renqun1" style="font-size: 60rpx;color: #1afa29;"></text>
         <text>我的关注</text>
       </view>
     </view>
     <view v-if="data.list.length > 0" class="title">足迹</view>
-    <view v-if="data.list.length > 0" class="history_box">
+    <!-- <view v-if="data.list.length > 0" class="history_box">
       <scroll-view scroll-x style="height: 250rpx; width: 100%;">
         <view style="width: 300%;height: 100%;">
           <view class="scoll">
@@ -40,7 +43,29 @@
           </view>
         </view>
       </scroll-view>
+    </view> -->
+
+    <view class="history-container">
+      <scroll-view class="scroll-view" scroll-x>
+        <view class="history-list" style="width: 300%;height: 100%;">
+          <view style="width: 300%;height: 100%;">
+            <view style="display: flex;height: 100%;">
+              <view v-for="(item, index) in data.list" :key="index" class="history-card" @click="goDetail(item)">
+                <image class="card-image" :src="item.cover" mode="aspectFill" />
+                <view class="card-content">
+                  <text class="card-title">{{ item.title }}</text>
+                  <view class="card-footer">
+                    <text class="card-author">{{ item.publicer }}</text>
+                    <text class="card-time">{{ differTime(item.created_at) }}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
     </view>
+
 
     <view class="set_box">
       <view class="item">
@@ -59,6 +84,7 @@
   </view>
 </template>
 <script setup lang='ts'>
+import { differTime } from '@/utils/times';
 import { onMounted, ref, reactive } from 'vue';
 import useUserStore from '@/store/module/user';
 import { reqGetUserStep } from '@/api/square';
@@ -95,7 +121,7 @@ const getInfo = async () => {
 
 const goLikes = () => {
   console.log('22222')
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/likes/index'
   })
 }
@@ -121,13 +147,13 @@ const editInfo = () => {
 
 
 const goWorks = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/works/index'
   })
 }
 
 const goFriend = () => {
-  uni.redirectTo({
+  uni.navigateTo({
     url: '/pages/friend/index'
   })
 }
@@ -224,53 +250,120 @@ const goFriend = () => {
     font-weight: bold;
   }
 
-  .history_box {
-    margin-top: 20rpx;
-    width: 100%;
-    height: 280rpx;
-    align-items: center;
-    border-radius: 30rpx;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  // .history_box {
+  //   margin-top: 20rpx;
+  //   width: 100%;
+  //   height: 280rpx;
+  //   align-items: center;
+  //   border-radius: 30rpx;
+  //   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  //   padding: 15rpx 0;
+  //   box-sizing: border-box;
+
+
+  //   .scoll {
+  //     display: flex;
+  //     height: 100%;
+
+  //     .scoll_item {
+  //       height: 100%;
+  //       width: 300rpx;
+  //       margin-right: 30rpx;
+  //       position: relative;
+
+  //       image {
+  //         width: 100%;
+  //         height: 100%;
+  //         background-color: rgba(39, 114, 188, 0.8);
+  //       }
+
+  //       .blank {
+  //         width: 100%;
+  //         height: 100%;
+  //         background-color: rgba(39, 114, 188, 0.8);
+  //       }
+
+  //       text {
+  //         font-size: 35rpx;
+  //         font-weight: bold;
+  //         position: absolute;
+  //         top: 50%;
+  //         left: 50%;
+  //         transform: translate(-50%, -50%);
+  //       }
+  //     }
+  //   }
+
+
+
+
+  // }
+
+  .history-container {
     padding: 15rpx 0;
-    box-sizing: border-box;
 
+  }
 
-    .scoll {
-      display: flex;
-      height: 100%;
+  .scroll-view {
+    width: 2000rpx;
+    overflow: auto;
+  }
 
-      .scoll_item {
-        height: 100%;
-        width: 300rpx;
-        margin-right: 30rpx;
-        position: relative;
+  // .history-list {
+  //   display: flex;
+  //   padding: 0 32rpx;
+  // }
 
-        image {
-          width: 100%;
-          height: 100%;
-          background-color: rgba(39, 114, 188, 0.8);
+  .history-card {
+    flex-shrink: 0;
+    width: 320rpx;
+    margin-right: 24rpx;
+    border-radius: 16rpx;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .card-image {
+      width: 320rpx;
+      height: 200rpx;
+      border-radius: 16rpx 16rpx 0 0;
+    }
+
+    .card-content {
+      padding: 20rpx;
+
+      .card-title {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333333;
+        line-height: 1.4;
+        margin-bottom: 16rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .card-time {
+          font-size: 12px;
+          color: #999999;
         }
 
-        .blank {
-          width: 100%;
-          height: 100%;
-          background-color: rgba(39, 114, 188, 0.8);
-        }
-
-        text {
-          font-size: 35rpx;
-          font-weight: bold;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+        .card-author {
+          font-size: 12px;
+          color: #666666;
         }
       }
     }
-
-
-
-
   }
 
   .set_box {

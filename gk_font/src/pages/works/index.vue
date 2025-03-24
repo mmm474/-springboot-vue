@@ -1,24 +1,42 @@
+
 <template>
-  <div class="container">
-    <div v-if="!data.friendId" class="title">我的作品</div>
-    <div v-else class="title">用户{{ data.friendname }}作品</div>
-    <div class="list">
-      <div class="item" v-for="(item, index) in data.list" :key="index" @click="goDetail(item.id)">
-        <image class="cover" :src="item.cover" mode="scaleToFill" />
-        <div class="footer">
-          <text>{{ item.title }}</text>
-          <text style='color: #8c8c8c;'>{{ differTime(item.created_at) }}</text>
-        </div>
-      </div>
-    </div>
-  </div>
+  <view class="collection-page">
+    <scroll-view class="content" scroll-y refresher-enabled :refresher-triggered="isRefreshing">
+      <view class="collection-list">
+        <view class="collection-item" v-for="(item, index) in data.list" :key="index">
+          <image class="cover-image" :src="item.cover" mode="widthFix" />
+          <view class="item-info">
+            <view class="info-top">
+              <text class="title">{{ item.title }}</text>
+              <text class="price">¥{{ item.price }}</text>
+            </view>
+            <view class="info-bottom">
+              <text class="time">{{ differTime(item.created_at) }}</text>
+              <view class="like-area">
+                <text style="font-size: 56rpx;color: #ccc;" class="iconfont icon-love"></text>
+                <text class="like-count">{{ item.likes }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
 </template>
-<script setup lang='ts'>
+
+<script lang="ts" setup>
+
 import { onLoad } from '@dcloudio/uni-app';
 import { reqGetUserGoods } from '../../api/square';
-import { reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import { differTime } from '@/utils/times';
 import useUserStore from '../../store/module/user';
+
 const userStore = useUserStore()
+
+const isRefreshing = ref(false);
+
+
 
 let data = reactive<{
   list: any[]
@@ -41,11 +59,11 @@ onLoad((options) => {
 
 const getData = async () => {
   const query = {
-    id: data.friendId ? parseInt(data.friendId) : userStore.UInfo.id
+    id: data.friendId ? parseInt(data.friendId) : userStore?.UInfo!.id
   }
   const res = await reqGetUserGoods(query)
   if (res.code == 200) {
-    data.list = res.data.map((i) => ({
+    data.list = res.data.map((i: any) => ({
       ...i,
       cover: i.images ? i.images.split(',')[0] : ''
     }))
@@ -59,84 +77,86 @@ const goDetail = (id: number) => {
   })
 }
 
-const differTime = (time: string) => {
-  const currentTime = new Date();
-  const targetTime = new Date(time);
-
-  console.log(currentTime, targetTime);
-
-  // @ts-ignore
-  const differenceInMilliseconds = currentTime - targetTime;
-  const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-  const differenceInHours = Math.floor(differenceInMinutes / 60);
-
-  if (differenceInHours < 1) {
-    return `${differenceInMinutes}分钟前`;
-  } else {
-    return `${differenceInHours}小时前`;
-  }
-};
-
 
 
 </script>
-<style lang='scss' scoped>
-.container {
-  width: 100%;
-  height: 100vh;
+
+<style scoped>
+.collection-page {
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #f5f5f5;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+.collection-list {
+  padding: 20rpx;
+}
+
+.collection-item {
+  margin-bottom: 20rpx;
+  background-color: #ffffff;
+  border-radius: 12rpx;
   overflow: hidden;
+}
 
-  .title {
-    width: 100%;
-    height: 60rpx;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-  }
+.cover-image {
+  width: 100%;
+  display: block;
+}
 
-  .list {
-    width: 100%;
-    flex-grow: 1;
-    overflow: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    padding: 12px 20px;
-    flex-direction: column;
-    box-sizing: border-box;
+.item-info {
+  padding: 24rpx;
+}
 
-    .item {
-      width: 100%;
-      height: 400rpx;
-      display: flex;
-      flex-direction: column;
-      align-content: center;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+.info-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
 
-      border: 1px solid #8c8c8c;
+.title {
+  flex: 1;
+  font-size: 14px;
+  color: #333333;
+  margin-right: 20rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-      .cover {
-        width: 100%;
-        height: 320px;
-        object-fit: cover;
-      }
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff4d4f;
+}
 
-      .footer {
-        padding: 0 8px;
-        box-sizing: border-box;
-        width: 100%;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-    }
-  }
+.info-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.time {
+  font-size: 12px;
+  color: #999999;
+}
+
+.like-area {
+  display: flex;
+  align-items: center;
+}
+
+.like-count {
+  font-size: 14px;
+  color: #999999;
+  margin-right: 8rpx;
 }
 </style>
+

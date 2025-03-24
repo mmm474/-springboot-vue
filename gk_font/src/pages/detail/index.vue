@@ -11,10 +11,10 @@
         <text class="publisher-name">{{ data.info.user.nickname }}</text>
       </view>
       <view class="add-friend-btn">
-        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary"
-          text="关注" @click="addFriend"></up-button>
-        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && data.isFriend" class="btn" type="error"
-          text="取消关注" @click="delFriend"></up-button>
+        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary" text="关注"
+          @click="addFriend"></up-button>
+        <up-button v-if="data.info.user.id !== userStore.UInfo?.id && data.isFriend" class="btn" type="error" text="取消关注"
+          @click="delFriend"></up-button>
       </view>
     </view>
     <!-- 商品详情 -->
@@ -23,7 +23,7 @@
         <text class="detail-text">{{ data.info.descr }}</text>
         <view class="image-list">
           <image v-for="(img, index) in data.info.images" :key="index" :src="img" mode="widthFix" class="product-image"
-            @click="previewImage(index)"></image>
+            @click="preview($event, data.info.images, index)"></image>
         </view>
       </view>
       <!-- 价格区域 -->
@@ -35,7 +35,7 @@
             <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
           </view> -->
         </view>
-        <view class="order-btn">
+        <view class="order-btn" v-if="data.info.user.id !== userStore.UInfo?.id && !data.isFriend">
           <up-button type="primary" @click="handleOrder">立即下单</up-button>
         </view>
 
@@ -46,6 +46,7 @@
         <view class="comment-input-area">
           <!-- <input type="text" v-model="data.contnet" placeholder="说点什么..." class="comment-input" />
           <up-button type="primary">发送</up-button> -->
+
         </view>
         <view class="comment-list">
           <view v-for="(comment, index) in data.info.remarks" :key="index" class="comment-item">
@@ -74,13 +75,14 @@
 
       <view class="input_box">
         <view @click="options.pop_flag = true"></view>
-        <text style="font-size: 48rpx;" v-if="data.isLike" class="iconfont icon-aixin" @click="downLike"></text>
-        <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
+        <text style="font-size: 56rpx;" v-if="data.isLike" class="iconfont icon-love" @click="downLike"></text>
+        <text style="color: #ccc;font-size: 56rpx;" v-else class="iconfont icon-love" @click="onLike"></text>
       </view>
     </scroll-view>
   </view>
 </template>
 <script setup lang='ts'>
+import { differTime } from '@/utils/times';
 import type { goodsDetail } from "../../types/square"
 import { onLoad } from '@dcloudio/uni-app';
 import { reqGetDetail, reqPublishComment, reqLike, reqGetUserLikes, reqDelLike, reqGoodsStep } from "../../api/square"
@@ -188,12 +190,13 @@ const addStep = async () => {
   await reqGoodsStep({ id: data.articl_id })
 }
 
-const previewImage = (index: number) => {
-  // uni.previewImage({
-  //   urls: productImages,
-  //   current: index
-  // });
-};
+const preview = (e: any, list: string[], index: number) => {
+  e.stopPropagation()
+  uni.previewImage({
+    urls: list,
+    current: index,
+  })
+}
 
 const handleOrder = () => {
   return
@@ -282,23 +285,6 @@ const closePop = () => {
   options.pop_flag = false
 }
 
-const differTime = (time: string) => {
-  const currentTime = new Date();
-  const targetTime = new Date(time);
-
-  console.log(currentTime, targetTime);
-
-  // @ts-ignore
-  const differenceInMilliseconds = currentTime - targetTime;
-  const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-  const differenceInHours = Math.floor(differenceInMinutes / 60);
-
-  if (differenceInHours < 1) {
-    return `${differenceInMinutes}分钟前`;
-  } else {
-    return `${differenceInHours}小时前`;
-  }
-};
 </script>
 <style scoped lang="scss">
 .input_box {

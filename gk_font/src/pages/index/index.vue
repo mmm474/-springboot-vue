@@ -5,7 +5,7 @@
     <!-- 搜索区域 -->
     <view class="search-container">
       <view class="search-box">
-        <uni-icons type="search" size="20" color="#999"></uni-icons>
+        <text class="iconfont icon-sousuo" style="font-size: 32rpx;color: #999;"></text>
         <input type="text" v-model="searchText" placeholder="搜索商品名称" placeholder-class="placeholder"
           @change="handleSearch" />
       </view>
@@ -16,7 +16,8 @@
       <view v-for="(item, index) in categorieOptions" :key="index" class="tab-item"
         :class="{ active: currentTab === item.value }" @tap="switchTab(item.value)">
         <view class="tab-icon">
-          <uni-icons :type="item.icon" size="24" :color="currentTab === item.value ? '#1976D2' : '#666'"></uni-icons>
+          <text :style="{ color: currentTab === item.value ? '#1976D2' : '#666' }" style="font-size: 24px;"
+            :class="item.icon"></text>
         </view>
         <text class="tab-text">{{ item.label }}</text>
       </view>
@@ -54,10 +55,10 @@ const data = reactive<{ list: any[] }>({
 })
 
 const categorieOptions = reactive([
-  { label: '生活', value: '0', icon: '' },
-  { label: '学习', value: '1', icon: '' },
-  { label: '娱乐', value: '2', icon: '' },
-  { label: '其他', value: '3', icon: '' },
+  { label: '生活', value: '0', icon: 'iconfont icon-Home' },
+  { label: '学习', value: '1', icon: 'iconfont icon-fenlei' },
+  { label: '娱乐', value: '2', icon: 'iconfont icon-shoucang' },
+  { label: '其他', value: '3', icon: 'iconfont icon-igw-l-more' },
 ])
 
 onMounted(() => {
@@ -277,6 +278,5 @@ page {
   font-weight: bold;
   margin-top: 8rpx;
 }
-
 </style>
 

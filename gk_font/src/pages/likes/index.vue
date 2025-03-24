@@ -1,18 +1,29 @@
 <template>
-  <div class="container">
-    <div class="title">我的收藏</div>
-    <div class="list">
-      <div class="item" v-for="(item, index) in data.List" :key="index" @click="goDetail(item.goods.id)">
-        <image class="cover" :src="item.cover" mode="scaleToFill" />
-        <div class="footer">
-          <text>{{ item.goods.title }}</text>
-          <text style='color: #8c8c8c;'>{{ differTime(item.goods.created_at) }}</text>
-        </div>
-      </div>
-    </div>
-  </div>
+  <view class="collection-page">
+    <scroll-view class="content" scroll-y refresher-enabled>
+      <view class="collection-list">
+        <view class="collection-item" v-for="(item, index) in data.List" :key="index">
+          <image class="cover-image" :src="item.cover" mode="widthFix" />
+          <view class="item-info">
+            <view class="info-top">
+              <text class="title">{{ item.goods.title }}</text>
+              <text class="price">¥{{ item.goods.price }}</text>
+            </view>
+            <view class="info-bottom">
+              <text class="time">{{ differTime(item.goods.created_at) }}</text>
+              <view class="like-area">
+                <text style="font-size: 56rpx;color: #ccc;" class="iconfont icon-love"></text>
+                <text class="like-count">{{ item.goods.likes }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
 </template>
 <script setup lang='ts'>
+import { differTime } from '@/utils/times';
 import { reqGetUserLikes } from '../../api/square';
 import { ref, reactive, onMounted } from 'vue';
 
@@ -28,7 +39,7 @@ onMounted(() => {
 const getData = async () => {
   const res = await reqGetUserLikes()
   if (res.code == 200) {
-    data.List = res.data.map((i) => ({
+    data.List = res.data.map((i: any) => ({
       ...i,
       cover: i.goods.images ? i.goods.images.split(',')[0] : ""
     }))
@@ -36,23 +47,7 @@ const getData = async () => {
   }
 }
 
-const differTime = (time: string) => {
-  const currentTime = new Date();
-  const targetTime = new Date(time);
 
-  console.log(currentTime, targetTime);
-
-  // @ts-ignore
-  const differenceInMilliseconds = currentTime - targetTime;
-  const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-  const differenceInHours = Math.floor(differenceInMinutes / 60);
-
-  if (differenceInHours < 1) {
-    return `${differenceInMinutes}分钟前`;
-  } else {
-    return `${differenceInHours}小时前`;
-  }
-};
 
 const goDetail = (id: number) => {
   uni.navigateTo({
@@ -61,63 +56,81 @@ const goDetail = (id: number) => {
 }
 
 </script>
-<style lang='scss' scoped>
-.container {
-  width: 100%;
-  height: 100vh;
+<style scoped>
+.collection-page {
+  height: 100%;
   display: flex;
   flex-direction: column;
+  background-color: #f5f5f5;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+.collection-list {
+  padding: 20rpx;
+}
+
+.collection-item {
+  margin-bottom: 20rpx;
+  background-color: #ffffff;
+  border-radius: 12rpx;
   overflow: hidden;
+}
 
-  .title {
-    width: 100%;
-    height: 60rpx;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-  }
+.cover-image {
+  width: 100%;
+  display: block;
+}
 
-  .list {
-    width: 100%;
-    flex-grow: 1;
-    overflow: auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    padding: 12px 20px;
-    flex-direction: column;
-    box-sizing: border-box;
+.item-info {
+  padding: 24rpx;
+}
 
-    .item {
-      width: 100%;
-      height: 400rpx;
-      display: flex;
-      flex-direction: column;
-      align-content: center;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      overflow: hidden;
-      box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+.info-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
 
-      border: 1px solid #8c8c8c;
+.title {
+  flex: 1;
+  font-size: 14px;
+  color: #333333;
+  margin-right: 20rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-      .cover {
-        width: 100%;
-        height: 320px;
-        object-fit: cover;
-      }
+.price {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff4d4f;
+}
 
-      .footer {
-        padding: 0 8px;
-        box-sizing: border-box;
-        width: 100%;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-    }
-  }
+.info-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.time {
+  font-size: 12px;
+  color: #999999;
+}
+
+.like-area {
+  display: flex;
+  align-items: center;
+}
+
+.like-count {
+  font-size: 14px;
+  color: #999999;
+  margin-right: 8rpx;
 }
 </style>

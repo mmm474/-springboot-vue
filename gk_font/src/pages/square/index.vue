@@ -2,29 +2,31 @@
   <view class="container">
     <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">社区广场</view>
     <view class="list" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
-      <view class="item" v-for="item in data.list" :key="item.id">
-        <view class="top_box">
-          <image :src="item.user.avatar ? item.user.avatar : '../../static/avatar.png'" mode="scaleToFill" />
-          <view class="des">
-            <text>{{ item.user.nickname ? item.user.nickname : '用户' + item.user.id }}</text>
-            <text>{{ differTime(item.created_at) }}</text>
+      <view class="list-container">
+        <view class="item" v-for="item in data.list" :key="item.id">
+          <view class="top_box">
+            <image :src="item.user.avatar ? item.user.avatar : '../../static/avatar.png'" mode="scaleToFill" />
+            <view class="des">
+              <text>{{ item.user.nickname ? item.user.nickname : '用户' + item.user.id }}</text>
+              <text>{{ differTime(item.created_at) }}</text>
+            </view>
           </view>
-        </view>
-        <view class="mid_box">
-          <view class="title">{{ item.title }}</view>
-          <view class="des" style="margin-bottom: 15rpx;">{{ item.descr }}</view>
-          <view class="img_box">
-            <image @click="preview($event, item.images ? item.images : [], index)" v-for="(i, index) in item.images"
-              :key="index" :src="i" mode="scaleToFill" />
+          <view class="mid_box">
+            <view class="title">{{ item.title }}</view>
+            <view class="des" style="margin-bottom: 15rpx;">{{ item.descr }}</view>
+            <view class="img_box">
+              <image @click="preview($event, item.images ? item.images : [], index)" v-for="(i, index) in item.images"
+                :key="index" :src="i" mode="scaleToFill" />
+            </view>
           </view>
-        </view>
-        <view class="bot_box">
-          <text class="iconfont icon-fenxiang">&nbsp;<text style="font-size: 30rpx;">分享</text></text>
-          <text @click="goDetail(item.id)" class="iconfont icon-pinglun">&nbsp;<text style="font-size: 30rpx;">评论{{
-            item.remarks.length > 0 ? '&nbsp;' + item.remarks.length : ''
-          }}</text></text>
-          <text class="iconfont icon-shoucang">&nbsp;<text style="font-size: 30rpx;">收藏{{ item.likes > 0 ? '&nbsp;'
-            + item.likes : '' }}</text></text>
+          <view class="bot_box">
+            <text class="iconfont icon-share">&nbsp;<text style="font-size: 30rpx;">分享</text></text>
+            <text @click="goDetail(item.id)" class="iconfont icon-pinglun">&nbsp;<text style="font-size: 30rpx;">评论{{
+              item.remarks.length > 0 ? '&nbsp;' + item.remarks.length : ''
+            }}</text></text>
+            <text class="iconfont icon-shoucang">&nbsp;<text style="font-size: 30rpx;">收藏{{ item.likes > 0 ? '&nbsp;'
+              + item.likes : '' }}</text></text>
+          </view>
         </view>
       </view>
     </view>
@@ -44,6 +46,7 @@ import { reactive, onMounted } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import { getSquareList } from '../../api/square';
 import type { goodsDetail } from "../../types/square"
+import { differTime } from '@/utils/times';
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
 const options = reactive({
@@ -83,23 +86,7 @@ const preview = (e: any, list: string[], index: number) => {
 
 // 计算时差
 
-const differTime = (time: string) => {
-  const currentTime = new Date();
-  const targetTime = new Date(time);
 
-  console.log(currentTime, targetTime);
-
-  // @ts-ignore
-  const differenceInMilliseconds = currentTime - targetTime;
-  const differenceInMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
-  const differenceInHours = Math.floor(differenceInMinutes / 60);
-
-  if (differenceInHours < 1) {
-    return `${differenceInMinutes}分钟前`;
-  } else {
-    return `${differenceInHours}小时前`;
-  }
-};
 
 const goDetail = (id: number) => {
   uni.navigateTo({
@@ -118,7 +105,7 @@ const goShare = () => {
 <style lang='scss' scoped>
 .container {
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   background-color: #fff;
   display: flex;
@@ -126,6 +113,7 @@ const goShare = () => {
   padding: 0 20rpx;
   box-sizing: border-box;
   align-items: center;
+  padding-top: 70rpx;
 
   .title_box {
     z-index: 999;
@@ -140,14 +128,20 @@ const goShare = () => {
   }
 
   .list {
-    height: auto;
-    overflow: auto;
-    margin-top: 70rpx;
+    height: 100%;
+    overflow: hidden;
+    // margin-top: 70rpx;
     width: 100%;
-    height: 2000rpx;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    // height: 2000rpx;
+
+
+    .list-container {
+      height: 100%;
+      overflow: scroll;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     .item {
       width: 100%;
@@ -208,7 +202,8 @@ const goShare = () => {
 
       .bot_box {
         width: 100%;
-        height: 120rpx;
+        // height: 120rpx;
+        margin-bottom: 40rpx;
         display: flex;
         align-items: center;
         justify-content: space-around;
