@@ -61,19 +61,22 @@
       "path": "pages/detail/index",
       "style": {
         "navigationBarTextStyle": "black",
-        "navigationBarTitleText": "详情"
+        // "navigationBarTitleText": "详情"
+        "navigationStyle": "custom"
       }
     },
     {
       "path": "pages/likes/index",
       "style": {
-        "navigationBarTextStyle": "black"
+        "navigationBarTextStyle": "black",
+        "navigationStyle": "custom"
       }
     },
     {
       "path": "pages/works/index",
       "style": {
-        "navigationBarTextStyle": "black"
+        "navigationBarTextStyle": "black",
+        "navigationStyle": "custom"
       }
     },
     {

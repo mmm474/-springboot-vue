@@ -1,10 +1,12 @@
 <template>
   <view class="page">
-    <view class="nav">
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
+      >个人信息</view
+    >
+    <view class="nav" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
       <view class="nav-content">
         <uni-icons @click="goBack" type="back" size="18" color="#374151" />
         <text></text>
-        <text class="nav-title">个人信息</text>
         <button class="save-btn" @click="handleSave">保存</button>
       </view>
     </view>
@@ -24,13 +26,23 @@
         <view class="form-item">
           <text class="form-label">昵称</text>
           <view class="input-container">
-            <input type="text" class="input" placeholder="请输入昵称" v-model="nickname" />
+            <input
+              type="text"
+              class="input"
+              placeholder="请输入昵称"
+              v-model="nickname"
+            />
           </view>
         </view>
         <view class="form-item">
           <text class="form-label">手机号</text>
           <view class="input-container">
-            <input type="text" class="input" placeholder="请输入手机号" v-model="phone" />
+            <input
+              type="text"
+              class="input"
+              placeholder="请输入手机号"
+              v-model="phone"
+            />
           </view>
         </view>
 
@@ -38,8 +50,13 @@
           <text class="form-label">性别</text>
           <view class="sex-group">
             <up-radio-group v-model="sex" placement="row">
-              <up-radio :customStyle="{ marginBottom: '8px' }" v-for="(item, index) in genderOptions" :key="index"
-                :label="item.label" :name="item.value">
+              <up-radio
+                :customStyle="{ marginBottom: '8px' }"
+                v-for="(item, index) in genderOptions"
+                :key="index"
+                :label="item.label"
+                :name="item.value"
+              >
               </up-radio>
             </up-radio-group>
           </view>
@@ -48,8 +65,13 @@
         <view class="form-item">
           <text class="form-label">个人简介</text>
           <view class="textarea-container">
-            <textarea class="textarea" v-model="describes" placeholder="介绍一下自己吧" />
-            <text class="word-count">{{ describes.length }}/140</text>
+            <up-textarea
+              class="textarea"
+              v-model="describes"
+              placeholder="介绍一下自己吧"
+              count
+            />
+            <!-- <text class="word-count">{{ describes.length }}/140</text> -->
           </view>
         </view>
         <!-- <view class="form-item">
@@ -73,104 +95,113 @@
 </template>
 
 <script lang="ts" setup>
-import { onShow } from '@dcloudio/uni-app';
-import useUserStore from '@/store/module/user';
+import { onShow } from "@dcloudio/uni-app"
+import useUserStore from "@/store/module/user"
 const userStore = useUserStore()
-import { ref } from 'vue';
-const avatar = ref('');
-const nickname = ref('');
-const sex = ref('0');
-const describes = ref('');
-const phone = ref('444');
-const files = ref<File>();
-const upVal = ref('');
+import { ref } from "vue"
+const avatar = ref("")
+const nickname = ref("")
+const sex = ref("0")
+const describes = ref("")
+const phone = ref("444")
+const files = ref<File>()
+const upVal = ref("")
 const genderOptions = [
-  { label: '男', value: '0' },
-  { label: '女', value: '1' },
-  { label: '保密', value: '-1' }
-];
+  { label: "男", value: "0" },
+  { label: "女", value: "1" },
+  { label: "保密", value: "-1" },
+]
 
 onShow(() => {
   avatar.value = userStore.UInfo?.avatar
-  nickname.value = userStore.UInfo?.nickname || ''
+  nickname.value = userStore.UInfo?.nickname || ""
   sex.value = userStore.UInfo?.sex.toString()
-  describes.value = userStore.UInfo?.describes || ''
-  phone.value = userStore.UInfo?.phone || ''
+  describes.value = userStore.UInfo?.describes || ""
+  phone.value = userStore.UInfo?.phone || ""
 })
 
 const goBack = () => {
-  uni.navigateBack();
-};
+  uni.navigateBack()
+}
 
 const handleSave = async () => {
-  console.log(files.value, nickname.value, sex.value, describes.value, phone.value)
-  if (nickname.value === '') {
+  console.log(
+    files.value,
+    nickname.value,
+    sex.value,
+    describes.value,
+    phone.value
+  )
+  if (nickname.value === "") {
     uni.showToast({
-      title: '请输入昵称',
-      icon: 'error'
-    });
-    return;
+      title: "请输入昵称",
+      icon: "error",
+    })
+    return
   }
   const query = {
     nickname: nickname.value,
     sex: parseInt(sex.value),
     describes: describes.value,
-    phone: phone.value
+    phone: phone.value,
   }
   const res = await userStore.userUpInfo(query, upVal.value)
   uni.showToast({
-    title: '保存成功',
-    icon: 'success'
-  });
-};
+    title: "保存成功",
+    icon: "success",
+  })
+}
 
 const changeAvatar = () => {
   uni.chooseImage({
     count: 1,
     success: (res) => {
       if (Array.isArray(res.tempFiles)) {
-        files.value = res.tempFiles[0] as File;
+        files.value = res.tempFiles[0] as File
       }
-      avatar.value = res.tempFilePaths[0];
-      upVal.value = res.tempFilePaths[0];
+      avatar.value = res.tempFilePaths[0]
+      upVal.value = res.tempFilePaths[0]
     },
     fail: (fail) => {
       console.log(fail)
     },
-  });
-};
+  })
+}
 
 const handleGenderChange = (value: string) => {
-  sex.value = value;
-};
+  sex.value = value
+}
 
 const handleSelectLocation = () => {
   // 处理选择地址逻辑
-};
+}
 
 const handleSelectBirthday = () => {
   // 处理选择生日逻辑
-};
+}
 </script>
 
 <style scoped>
 .page {
-  height: 100%;
+  height: 100vh;
   background-color: #f9fafb;
 }
 
-.page {
-  min-height: 100%;
-  background-color: #ffffff;
+.title_box {
+  z-index: 999;
+  background-color: #f9fafb;
+  position: fixed;
+  top: 0;
+  height: 80rpx;
+  width: 100%;
+  font-weight: bold;
+  text-align: center;
+  line-height: 80rpx;
 }
 
 .nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
   z-index: 100;
 }
 
@@ -191,7 +222,7 @@ const handleSelectBirthday = () => {
 
 .save-btn {
   font-size: 40rpx;
-  color: #4F46E5;
+  color: #4f46e5;
   background: none;
   padding: 0 12px;
   display: flex;
@@ -226,7 +257,7 @@ const handleSelectBirthday = () => {
   width: 100%;
   height: 100%;
   border-radius: 100%;
-  border: 4rpx solid #4F46E5;
+  border: 4rpx solid #4f46e5;
 }
 
 .camera-btn {
@@ -236,7 +267,7 @@ const handleSelectBirthday = () => {
   width: 64rpx;
   height: 64rpx;
   border-radius: 100%;
-  background-color: #4F46E5;
+  background-color: #4f46e5;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,15 +328,16 @@ const handleSelectBirthday = () => {
 
 .textarea-container {
   position: relative;
+  width: auto;
 }
 
 .textarea {
   /* width: 100%; */
-  height: 180rpx;
+  /* height: 180rpx; */
   padding: 32rpx;
   border: 2rpx solid #e5e7eb;
   border-radius: 16rpx;
-  font-size: 32rpx
+  font-size: 32rpx;
 }
 
 .word-count {

@@ -1,8 +1,16 @@
 <template>
   <view class="collection-page">
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
+      >我的收藏</view
+    >
     <scroll-view class="content" scroll-y refresher-enabled>
       <view class="collection-list">
-        <view class="collection-item" v-for="(item, index) in data.List" :key="index">
+        <view
+          class="collection-item"
+          v-for="(item, index) in data.List"
+          :key="index"
+          @click="goDetail(item.goods.id)"
+        >
           <image class="cover-image" :src="item.cover" mode="widthFix" />
           <view class="item-info">
             <view class="info-top">
@@ -12,7 +20,10 @@
             <view class="info-bottom">
               <text class="time">{{ differTime(item.goods.created_at) }}</text>
               <view class="like-area">
-                <text style="font-size: 56rpx;color: #ccc;" class="iconfont icon-love"></text>
+                <text
+                  style="font-size: 56rpx; color: #ccc"
+                  class="iconfont icon-love"
+                ></text>
                 <text class="like-count">{{ item.goods.likes }}</text>
               </view>
             </view>
@@ -23,14 +34,14 @@
   </view>
 </template>
 <script setup lang='ts'>
-import { differTime } from '@/utils/times';
-import { reqGetUserLikes } from '../../api/square';
-import { ref, reactive, onMounted } from 'vue';
+import { differTime } from "@/utils/times"
+import { reqGetUserLikes } from "../../api/square"
+import { ref, reactive, onMounted } from "vue"
 
 let data = reactive<{
   List: any[]
 }>({
-  List: []
+  List: [],
 })
 onMounted(() => {
   getData()
@@ -41,22 +52,31 @@ const getData = async () => {
   if (res.code == 200) {
     data.List = res.data.map((i: any) => ({
       ...i,
-      cover: i.goods.images ? i.goods.images.split(',')[0] : ""
+      cover: i.goods.images ? i.goods.images.split(",")[0] : "",
     }))
     console.log(data.List)
   }
 }
 
-
-
 const goDetail = (id: number) => {
   uni.navigateTo({
-    url: `/pages/detail/index?id=${id}`
+    url: `/pages/detail/index?id=${id}`,
   })
 }
-
 </script>
 <style scoped>
+.title_box {
+  z-index: 999;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  height: 80rpx;
+  width: 100%;
+  font-weight: bold;
+  text-align: center;
+  line-height: 80rpx;
+}
+
 .collection-page {
   height: 100%;
   display: flex;

@@ -1,9 +1,22 @@
 
 <template>
   <view class="collection-page">
-    <scroll-view class="content" scroll-y refresher-enabled :refresher-triggered="isRefreshing">
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
+      >我的发布</view
+    >
+    <scroll-view
+      class="content"
+      scroll-y
+      refresher-enabled
+      :refresher-triggered="isRefreshing"
+    >
       <view class="collection-list">
-        <view class="collection-item" v-for="(item, index) in data.list" :key="index">
+        <view
+          class="collection-item"
+          v-for="(item, index) in data.list"
+          :key="index"
+          @click="goDetail(item.id)"
+        >
           <image class="cover-image" :src="item.cover" mode="widthFix" />
           <view class="item-info">
             <view class="info-top">
@@ -13,7 +26,10 @@
             <view class="info-bottom">
               <text class="time">{{ differTime(item.created_at) }}</text>
               <view class="like-area">
-                <text style="font-size: 56rpx;color: #ccc;" class="iconfont icon-love"></text>
+                <text
+                  style="font-size: 56rpx; color: #ccc"
+                  class="iconfont icon-love"
+                ></text>
                 <text class="like-count">{{ item.likes }}</text>
               </view>
             </view>
@@ -25,18 +41,15 @@
 </template>
 
 <script lang="ts" setup>
-
-import { onLoad } from '@dcloudio/uni-app';
-import { reqGetUserGoods } from '../../api/square';
-import { ref, reactive, onMounted } from 'vue';
-import { differTime } from '@/utils/times';
-import useUserStore from '../../store/module/user';
+import { onLoad } from "@dcloudio/uni-app"
+import { reqGetUserGoods } from "../../api/square"
+import { ref, reactive, onMounted } from "vue"
+import { differTime } from "@/utils/times"
+import useUserStore from "../../store/module/user"
 
 const userStore = useUserStore()
 
-const isRefreshing = ref(false);
-
-
+const isRefreshing = ref(false)
 
 let data = reactive<{
   list: any[]
@@ -44,8 +57,8 @@ let data = reactive<{
   friendname: string
 }>({
   list: [],
-  friendId: '',
-  friendname: ''
+  friendId: "",
+  friendname: "",
 })
 onMounted(() => {
   getData()
@@ -53,19 +66,19 @@ onMounted(() => {
 
 onLoad((options) => {
   console.log(options)
-  data.friendId = options?.friendId || ''
-  data.friendname = options?.friendname || ''
+  data.friendId = options?.friendId || ""
+  data.friendname = options?.friendname || ""
 })
 
 const getData = async () => {
   const query = {
-    id: data.friendId ? parseInt(data.friendId) : userStore?.UInfo!.id
+    id: data.friendId ? parseInt(data.friendId) : userStore?.UInfo!.id,
   }
   const res = await reqGetUserGoods(query)
   if (res.code == 200) {
     data.list = res.data.map((i: any) => ({
       ...i,
-      cover: i.images ? i.images.split(',')[0] : ''
+      cover: i.images ? i.images.split(",")[0] : "",
     }))
     console.log(data)
   }
@@ -73,12 +86,9 @@ const getData = async () => {
 
 const goDetail = (id: number) => {
   uni.navigateTo({
-    url: `/pages/detail/index?id=${id}`
+    url: `/pages/detail/index?id=${id}`,
   })
 }
-
-
-
 </script>
 
 <style scoped>
@@ -87,6 +97,18 @@ const goDetail = (id: number) => {
   display: flex;
   flex-direction: column;
   background-color: #f5f5f5;
+}
+
+.title_box {
+  z-index: 999;
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  height: 80rpx;
+  width: 100%;
+  font-weight: bold;
+  text-align: center;
+  line-height: 80rpx;
 }
 
 .content {
