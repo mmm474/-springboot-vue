@@ -1,34 +1,66 @@
 <template>
   <view class="container">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">社区广场</view>
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
+      >社区广场</view
+    >
     <view class="list" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
-      <view class="list-container">
+      <scroll-view
+        class="list-container"
+        scroll-y
+        @scrolltolower="loadMore"
+        @refresherrefresh="refresh"
+        refresher-enabled
+        :refresher-triggered="isRefreshing"
+      >
         <view class="item" v-for="item in data.list" :key="item.id">
           <view class="top_box">
-            <image :src="item.user.avatar ? item.user.avatar : '../../static/avatar.png'" mode="scaleToFill" />
+            <image
+              mode="widthFix"
+              :src="
+                item.user.avatar ? item.user.avatar : '../../static/avatar.png'
+              "
+            />
             <view class="des">
-              <text>{{ item.user.nickname ? item.user.nickname : '用户' + item.user.id }}</text>
+              <text>{{
+                item.user.nickname ? item.user.nickname : "用户" + item.user.id
+              }}</text>
               <text>{{ differTime(item.created_at) }}</text>
             </view>
           </view>
           <view class="mid_box">
             <view class="title">{{ item.title }}</view>
-            <view class="des" style="margin-bottom: 15rpx;">{{ item.descr }}</view>
+            <view class="des" style="margin-bottom: 15rpx">{{
+              item.descr
+            }}</view>
             <view class="img_box">
-              <image @click="preview($event, item.images ? item.images : [], index)" v-for="(i, index) in item.images"
-                :key="index" :src="i" mode="scaleToFill" />
+              <image
+                @click="preview($event, item.images ? item.images : [], index)"
+                v-for="(i, index) in item.images"
+                :key="index"
+                :src="i"
+                mode="scaleToFill"
+              />
             </view>
           </view>
           <view class="bot_box">
-            <text class="iconfont icon-share">&nbsp;<text style="font-size: 30rpx;">分享</text></text>
-            <text @click="goDetail(item.id)" class="iconfont icon-pinglun">&nbsp;<text style="font-size: 30rpx;">评论{{
-              item.remarks.length > 0 ? '&nbsp;' + item.remarks.length : ''
-            }}</text></text>
-            <text class="iconfont icon-shoucang">&nbsp;<text style="font-size: 30rpx;">收藏{{ item.likes > 0 ? '&nbsp;'
-              + item.likes : '' }}</text></text>
+            <text class="iconfont icon-share"
+              >&nbsp;<text style="font-size: 30rpx">分享</text></text
+            >
+            <text @click="goDetail(item.id)" class="iconfont icon-pinglun"
+              >&nbsp;<text style="font-size: 30rpx"
+                >评论{{
+                  item.remarks.length > 0 ? "&nbsp;" + item.remarks.length : ""
+                }}</text
+              ></text
+            >
+            <text class="iconfont icon-shoucang"
+              >&nbsp;<text style="font-size: 30rpx"
+                >收藏{{ item.likes > 0 ? "&nbsp;" + item.likes : "" }}</text
+              ></text
+            >
           </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
 
     <!-- 发布按钮 -->
@@ -41,17 +73,16 @@
 
 
 <script setup lang='ts'>
-
-import { reactive, onMounted } from 'vue';
-import { onShow } from '@dcloudio/uni-app';
-import { getSquareList } from '../../api/square';
+import { ref, reactive, onMounted } from "vue"
+import { onShow } from "@dcloudio/uni-app"
+import { getSquareList } from "../../api/square"
 import type { goodsDetail } from "../../types/square"
-import { differTime } from '@/utils/times';
+import { differTime } from "@/utils/times"
 const { safeAreaInsets } = uni.getSystemInfoSync()
-
+const isRefreshing = ref(false)
 const options = reactive({
   pageSize: 10,
-  page: 1
+  page: 1,
 })
 
 const data = reactive<{ list: goodsDetail[] }>({
@@ -61,13 +92,38 @@ onMounted(() => {
   getList()
 })
 
+const loadMore = () => {
+  // 加载更多逻辑
+  options.page++
+  getList()
+}
+
+const refresh = () => {
+  options.page = 1
+  isRefreshing.value = true
+  getList().then(() => {
+    isRefreshing.value = false
+  })
+
+  return
+}
+
 const getList = async () => {
   const res = await getSquareList(options)
   if (res.code === 200) {
-    data.list = res.data.map((i) => ({
-      ...i,
-      images: i.images ? i.images.split(",") : []
-    }))
+    let dlist
+    if (res.data.length > 0) {
+      dlist = res.data.map((i) => ({
+        ...i,
+        images: i.images ? i.images.split(",") : [],
+      }))
+    } else {
+      if (options.page === 1) {
+        return
+      }
+      options.page--
+    }
+    data.list = [...data.list, ...(dlist || [])]
   }
 }
 
@@ -86,21 +142,17 @@ const preview = (e: any, list: string[], index: number) => {
 
 // 计算时差
 
-
-
 const goDetail = (id: number) => {
   uni.navigateTo({
-    url: `/pages/detail/index?id=${id}`
+    url: `/pages/detail/index?id=${id}`,
   })
 }
 
 const goShare = () => {
   uni.navigateTo({
-    url: `/pages/share/index`
+    url: `/pages/share/index`,
   })
 }
-
-
 </script>
 <style lang='scss' scoped>
 .container {
@@ -128,16 +180,20 @@ const goShare = () => {
   }
 
   .list {
+    padding-top: 12rpx;
     height: 100%;
     overflow: hidden;
     // margin-top: 70rpx;
     width: 100%;
     // height: 2000rpx;
 
-
     .list-container {
+      flex: 1;
+      overflow: auto;
+      padding: 20rpx;
+
       height: 100%;
-      overflow: scroll;
+      // overflow: scroll;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -178,7 +234,7 @@ const goShare = () => {
 
             &:nth-child(2) {
               font-size: 24rpx;
-              color: #999
+              color: #999;
             }
           }
         }
@@ -187,6 +243,15 @@ const goShare = () => {
       .mid_box {
         width: 100%;
         border-bottom: 1px solid #eee;
+
+        .img_box {
+          width: 100%;
+
+          image {
+            width: 100%;
+            object-fit: fill;
+          }
+        }
 
         .title {
           font-size: 30rpx;
@@ -197,7 +262,6 @@ const goShare = () => {
         .des {
           width: 100%;
         }
-
       }
 
       .bot_box {

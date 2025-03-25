@@ -85,6 +85,7 @@ let timer: any = null
 const data = reactive<{ list: any[] }>({
   list: [],
 })
+const page = ref(1)
 
 const categorieOptions = reactive([
   { label: "生活", value: "0", icon: "iconfont icon-Home" },
@@ -99,14 +100,23 @@ onMounted(() => {
 
 const getList = async () => {
   const res = await getSquareListByCategorie({
-    page: 1,
+    page: page.value,
     pageSize: 10,
     categorie: parseInt(currentTab.value),
   })
-  data.list = res.data.map((i) => ({
-    ...i,
-    cover: i.images ? i.images.split(",")[0] : "",
-  }))
+  let dlist
+  if (res.data.length > 0) {
+    dlist = res.data.map((i) => ({
+      ...i,
+      cover: i.images ? i.images.split(",")[0] : "",
+    }))
+  } else {
+    if (page.value === 1) {
+      return
+    }
+    page.value--
+  }
+  data.list = [...data.list, ...(dlist || [])]
 }
 
 const differTime = (time: string) => {
@@ -152,9 +162,17 @@ const handleSearch = () => {
 
 const loadMore = () => {
   // 加载更多逻辑
+  page.value++
+  getList()
 }
 
 const refresh = () => {
+  page.value = 1
+  isRefreshing.value = true
+  getList().then(() => {
+    isRefreshing.value = false
+  })
+
   return
 }
 

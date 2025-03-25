@@ -26,8 +26,6 @@ import { ref, reactive } from "vue"
 import useUserStore from "@/store/module/user"
 const userStore = useUserStore()
 
-const port = uni.getSystemInfoSync().platform
-
 let uToastRef = ref()
 const data = reactive({
   username: "",
@@ -35,14 +33,15 @@ const data = reactive({
 })
 
 const goLogin = async () => {
+  console.log(uni.getSystemInfoSync().platform)
   if (uni.getSystemInfoSync().platform !== "小程序") {
     const query = {
       username: data.username,
       password: data.password,
       user_code: 1,
     }
-    await userStore.getLogin(query)
-    if (userStore.token) {
+    try {
+      await userStore.getLogin(query)
       uToastRef.value.show({
         message: "登录成功",
         type: "success",
@@ -52,7 +51,17 @@ const goLogin = async () => {
       uni.switchTab({
         url: "/pages/index/index",
       })
+    } catch (error) {
+      console.log(error)
+      uToastRef.value.show({
+        message: error,
+        type: "error",
+        duration: 2000,
+        iconUrl: "https://cdn.uviewui.com/uview/demo/toast/error.png",
+      })
+      resetIpt()
     }
+    return
   }
   uni.login({
     success: async (result) => {
