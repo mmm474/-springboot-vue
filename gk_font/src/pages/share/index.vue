@@ -3,62 +3,34 @@
     <form action="">
       <view class="item">
         <text>标题：</text>
-        <input
-          v-model="data.title"
-          required
-          type="text"
-          placeholder="请输入文案标题"
-        />
+        <input v-model="data.title" required type="text" placeholder="请输入文案标题" />
       </view>
       <view class="item">
         <text>价格（单位元）：</text>
-        <input
-          v-model="data.price"
-          required
-          type="text"
-          placeholder="请输价格"
-        />
+        <input v-model="data.price" required type="text" placeholder="请输价格" />
       </view>
       <view class="item">
         <text>内容：</text>
-        <textarea
-          v-model="data.descr"
-          required
-          name=""
-          id=""
-          cols="30"
-          rows="10"
-        ></textarea>
+        <textarea v-model="data.descr" required name="" id="" cols="30" rows="10"></textarea>
       </view>
       <view class="item">
         <text>分类：</text>
         <up-radio-group v-model="data.categorie" placement="row">
-          <up-radio
-            :customStyle="{ marginBottom: '8px' }"
-            v-for="(item, index) in categorieOptions"
-            :key="index"
-            :label="item.label"
-            :name="item.value"
-          >
+          <up-radio :customStyle="{ marginBottom: '8px' }" v-for="(item, index) in categorieOptions" :key="index"
+            :label="item.label" :name="item.value">
           </up-radio>
         </up-radio-group>
       </view>
       <view class="item">
         <text>上传图片：</text>
         <view style="margin-top: 10rpx">
-          <up-upload
-            :fileList="fileList1"
-            :maxCount="3"
-            @afterRead="afterRead"
-            @delete="deletePic"
-            name="1"
-            multiple
-          ></up-upload>
+          <up-upload :fileList="fileList1" :maxCount="3" @afterRead="afterRead" @delete="deletePic" name="1"
+            multiple></up-upload>
         </view>
       </view>
     </form>
     <view class="btn">
-      <up-button type="primary" @click="addArticl" text="确定"></up-button>
+      <up-button type="primary" @click="addArticl" text="确定" :loading="loading" loading-text="正在上传"></up-button>
     </view>
     <u-toast ref="uToastRef"></u-toast>
   </view>
@@ -70,7 +42,7 @@ import { ref, reactive } from "vue"
 // const userStore = useUserStore()
 
 let uToastRef = ref()
-
+const loading = ref(false)
 const data = reactive<{
   title: string
   descr: string
@@ -114,6 +86,7 @@ const afterRead = async (event: any) => {
 }
 
 const addArticl = async () => {
+  loading.value = true
   const eventList: Promise<string>[] = []
   files.forEach((i) => {
     const event = new Promise(async (resolve, reject) => {
@@ -141,7 +114,7 @@ const addArticl = async () => {
       return
     }
 
-    if (parseInt(query.price) === 0) {
+    if (query.price === 0) {
       uToastRef.value.show({
         message: "价格不能为0",
         type: "warning",
@@ -171,6 +144,7 @@ const addArticl = async () => {
         duration: 1000,
       })
     }
+    loading.value = false
   })
 }
 </script>

@@ -1,23 +1,13 @@
 
 <template>
   <view class="container">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-      >我的关注</view
-    >
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">我的关注</view>
     <!-- 搜索区域 -->
     <view class="search-container">
       <view class="search-box">
-        <text
-          class="iconfont icon-sousuo"
-          style="font-size: 32rpx; color: #999"
-        ></text>
-        <input
-          type="text"
-          v-model="searchText"
-          placeholder="输入昵称搜索好友"
-          placeholder-class="placeholder"
-          class="search-input"
-        />
+        <text class="iconfont icon-sousuo" style="font-size: 32rpx; color: #999"></text>
+        <input type="text" v-model="searchText" placeholder="输入昵称搜索好友" placeholder-class="placeholder"
+          class="search-input" />
       </view>
     </view>
 
@@ -27,18 +17,10 @@
         <image :src="item.avatar" class="avatar" mode="aspectFill" />
         <text class="nickname">{{ item.nickname }}</text>
         <view class="actions">
-          <up-button
-            type="primary"
-            @click="viewFriend(item)"
-            class="action-btn view-btn"
-          >
+          <up-button type="primary" @click="viewFriend(item)" class="action-btn view-btn">
             查看
           </up-button>
-          <up-button
-            type="error"
-            @click="showDeleteConfirm(item)"
-            class="action-btn delete-btn"
-          >
+          <up-button type="error" @click="showDeleteConfirm(item)" class="action-btn delete-btn">
             删除
           </up-button>
         </view>
@@ -48,6 +30,7 @@
 </template>
 
 <script lang="ts" setup>
+
 import { ref, computed, reactive, onMounted, watch } from "vue"
 import { reqFriendDel, reqFriendList } from "../../api/user"
 import type { Uinfo } from "../../types/user"
@@ -67,7 +50,7 @@ const searchText = ref("")
 let data = reactive<{ list: Friend[] }>({
   list: [],
 })
-
+const { safeAreaInsets } = uni.getSystemInfoSync()
 onMounted(() => {
   getList()
 })

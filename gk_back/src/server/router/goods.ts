@@ -19,7 +19,16 @@ goodsRouter.post("/publish", async (req, res) => {
     res.status(500).send(error)
   }
 })
-
+// 删除商品
+goodsRouter.post("/delete", async (req, res) => {
+  try {
+    const id = req.body.id
+    res.send(await GoodsService.delGoods(parseInt(id)))
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+})
 
 // 获取商品列表
 goodsRouter.get("/list", async (req, res) => {

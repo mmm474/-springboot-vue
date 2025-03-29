@@ -1,13 +1,14 @@
 <template>
   <view class="page">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-      >个人信息</view
-    >
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">个人信息</view>
     <view class="nav" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
       <view class="nav-content">
         <uni-icons @click="goBack" type="back" size="18" color="#374151" />
         <text></text>
-        <button class="save-btn" @click="handleSave">保存</button>
+        <view>
+          <up-button type="primary" size="small" class="save-btn" :disabled="loading" @click="handleSave"
+            :loading="loading" loadingText="正在上传">保存</up-button>
+        </view>
       </view>
     </view>
 
@@ -26,23 +27,13 @@
         <view class="form-item">
           <text class="form-label">昵称</text>
           <view class="input-container">
-            <input
-              type="text"
-              class="input"
-              placeholder="请输入昵称"
-              v-model="nickname"
-            />
+            <input type="text" class="input" placeholder="请输入昵称" v-model="nickname" />
           </view>
         </view>
         <view class="form-item">
           <text class="form-label">手机号</text>
           <view class="input-container">
-            <input
-              type="text"
-              class="input"
-              placeholder="请输入手机号"
-              v-model="phone"
-            />
+            <input type="text" class="input" placeholder="请输入手机号" v-model="phone" />
           </view>
         </view>
 
@@ -50,13 +41,8 @@
           <text class="form-label">性别</text>
           <view class="sex-group">
             <up-radio-group v-model="sex" placement="row">
-              <up-radio
-                :customStyle="{ marginBottom: '8px' }"
-                v-for="(item, index) in genderOptions"
-                :key="index"
-                :label="item.label"
-                :name="item.value"
-              >
+              <up-radio :customStyle="{ marginBottom: '8px' }" v-for="(item, index) in genderOptions" :key="index"
+                :label="item.label" :name="item.value">
               </up-radio>
             </up-radio-group>
           </view>
@@ -65,12 +51,7 @@
         <view class="form-item">
           <text class="form-label">个人简介</text>
           <view class="textarea-container">
-            <up-textarea
-              class="textarea"
-              v-model="describes"
-              placeholder="介绍一下自己吧"
-              count
-            />
+            <up-textarea class="textarea" v-model="describes" placeholder="介绍一下自己吧" count />
             <!-- <text class="word-count">{{ describes.length }}/140</text> -->
           </view>
         </view>
@@ -95,6 +76,7 @@
 </template>
 
 <script lang="ts" setup>
+const { safeAreaInsets } = uni.getSystemInfoSync()
 import { onShow } from "@dcloudio/uni-app"
 import useUserStore from "@/store/module/user"
 const userStore = useUserStore()
@@ -106,6 +88,7 @@ const describes = ref("")
 const phone = ref("444")
 const files = ref<File>()
 const upVal = ref("")
+const loading = ref(false)
 const genderOptions = [
   { label: "男", value: "0" },
   { label: "女", value: "1" },
@@ -113,9 +96,9 @@ const genderOptions = [
 ]
 
 onShow(() => {
-  avatar.value = userStore.UInfo?.avatar
+  avatar.value = userStore.UInfo?.avatar as string
   nickname.value = userStore.UInfo?.nickname || ""
-  sex.value = userStore.UInfo?.sex.toString()
+  sex.value = (userStore.UInfo?.sex as number).toString()
   describes.value = userStore.UInfo?.describes || ""
   phone.value = userStore.UInfo?.phone || ""
 })
@@ -125,13 +108,7 @@ const goBack = () => {
 }
 
 const handleSave = async () => {
-  console.log(
-    files.value,
-    nickname.value,
-    sex.value,
-    describes.value,
-    phone.value
-  )
+  loading.value = true
   if (nickname.value === "") {
     uni.showToast({
       title: "请输入昵称",
@@ -145,11 +122,19 @@ const handleSave = async () => {
     describes: describes.value,
     phone: phone.value,
   }
-  const res = await userStore.userUpInfo(query, upVal.value)
-  uni.showToast({
-    title: "保存成功",
-    icon: "success",
-  })
+  try {
+    await userStore.userUpInfo(query, upVal.value)
+    uni.showToast({
+      title: "保存成功",
+      icon: "success",
+    })
+  } catch (error) {
+    uni.showToast({
+      title: "保存失败",
+      icon: "error",
+    })
+  }
+  loading.value = false
 }
 
 const changeAvatar = () => {
@@ -221,10 +206,10 @@ const handleSelectBirthday = () => {
 }
 
 .save-btn {
-  font-size: 40rpx;
-  color: #4f46e5;
-  background: none;
-  padding: 0 12px;
+  /* font-size: 40rpx;
+  color: #4f46e5; */
+  /* background: none; */
+  /* padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,7 +217,7 @@ const handleSelectBirthday = () => {
   height: 60rpx;
   border: none;
 
-  margin: 0;
+  margin: 0; */
 }
 
 .main {

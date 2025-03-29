@@ -3,19 +3,10 @@
     <view class="title">欢迎登录!</view>
     <form>
       <view class="Spa">账号密码登录</view>
-      <input
-        type="text"
-        placeholder="请输入你的手机号"
-        v-model="data.username"
-      />
+      <input type="text" placeholder="请输入你的手机号" v-model="data.username" />
       <input type="text" placeholder="请输入你的密码" v-model="data.password" />
       <button @tap.prevent="goLogin">登录</button>
-      <view class="txt"
-        ><text>没有账号？</text
-        ><text @tap="goReg" style="color: rgb(13, 77, 214)"
-          >立马注册</text
-        ></view
-      >
+      <view class="txt"><text>没有账号？</text><text @tap="goReg" style="color: rgb(13, 77, 214)">立马注册</text></view>
     </form>
     <u-toast ref="uToastRef"></u-toast>
   </view>
@@ -38,7 +29,7 @@ const goLogin = async () => {
     const query = {
       username: data.username,
       password: data.password,
-      user_code: 1,
+      user_code: '1',
     }
     try {
       await userStore.getLogin(query)

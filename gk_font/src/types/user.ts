@@ -11,6 +11,7 @@ export type Uinfo = {
   created_at?: string,
   iat?: number,
   exp?: number
+  phone?: string
 }
 
 export interface UserState {

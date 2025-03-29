@@ -1,8 +1,6 @@
 <template>
   <view class="container">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-      >商品详情</view
-    >
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">商品详情</view>
     <!-- 商品标题 -->
     <view class="title-section">
       <text class="title">{{ data.info.title }}</text>
@@ -10,28 +8,14 @@
     <!-- 发布者信息 -->
     <view class="publisher-section">
       <view class="publisher-info">
-        <image
-          class="avatar"
-          :src="data.info.user?.avatar ? data.info.user?.avatar : ''"
-          mode="aspectFill"
-        ></image>
+        <image class="avatar" :src="data.info.user?.avatar ? data.info.user?.avatar : ''" mode="aspectFill"></image>
         <text class="publisher-name">{{ data.info.user?.nickname }}</text>
       </view>
       <view class="add-friend-btn">
-        <up-button
-          v-if="data.info.user?.id !== userStore.UInfo?.id && !data.isFriend"
-          class="btn"
-          type="primary"
-          text="关注"
-          @click="addFriend"
-        ></up-button>
-        <up-button
-          v-if="data.info.user?.id !== userStore.UInfo?.id && data.isFriend"
-          class="btn"
-          type="error"
-          text="取消关注"
-          @click="delFriend"
-        ></up-button>
+        <up-button v-if="data.info.user?.id !== userStore.UInfo?.id && !data.isFriend" class="btn" type="primary"
+          text="关注" @click="addFriend"></up-button>
+        <up-button v-if="data.info.user?.id !== userStore.UInfo?.id && data.isFriend" class="btn" type="error" text="取消关注"
+          @click="delFriend"></up-button>
       </view>
     </view>
     <!-- 商品详情 -->
@@ -39,14 +23,8 @@
       <view class="detail-section">
         <text class="detail-text">{{ data.info.descr }}</text>
         <view class="image-list">
-          <image
-            v-for="(img, index) in data.info.images"
-            :key="index"
-            :src="img"
-            mode="widthFix"
-            class="product-image"
-            @click="preview($event, data.info.images, index)"
-          ></image>
+          <image v-for="(img, index) in data.info.images" :key="index" :src="img" mode="widthFix" class="product-image"
+            @click="preview($event, data.info.images, index)"></image>
         </view>
       </view>
       <!-- 价格区域 -->
@@ -58,14 +36,11 @@
             <text style="color: #ccc;font-size: 48rpx;" v-else class="iconfont icon--like-in" @click="onLike"></text>
           </view> -->
         </view>
-        <view
-          class="order-btn"
-          v-if="data.info.user?.id !== userStore.UInfo?.id"
-        >
+        <view class="order-btn" v-if="data.info.user?.id !== userStore.UInfo?.id">
           <up-button type="primary" @click="handleOrder">立即下单</up-button>
         </view>
         <view class="order-btn" v-else>
-          <up-button type="error" @click="handleOrder">取消发布</up-button>
+          <up-button type="error" @click="handleDel(data.info.id)">取消发布</up-button>
         </view>
       </view>
       <!-- 留言区域 -->
@@ -76,16 +51,8 @@
           <up-button type="primary">发送</up-button> -->
         </view>
         <view class="comment-list">
-          <view
-            v-for="(comment, index) in data.info.remarks"
-            :key="index"
-            class="comment-item"
-          >
-            <image
-              :src="comment?.avatar"
-              class="comment-avatar"
-              mode="aspectFill"
-            ></image>
+          <view v-for="(comment, index) in data.info.remarks" :key="index" class="comment-item">
+            <image :src="comment?.avatar" class="comment-avatar" mode="aspectFill"></image>
             <view class="comment-content">
               <text class="comment-username">{{ comment?.nickname }}</text>
               <text class="comment-text">{{ comment?.content }}</text>
@@ -97,14 +64,8 @@
         </view>
       </view>
 
-      <up-popup
-        :show="options.pop_flag"
-        mode="bottom"
-        @close="closePop"
-        class="pop_box"
-      >
-        <view
-          style="
+      <up-popup :show="options.pop_flag" mode="bottom" @close="closePop" class="pop_box">
+        <view style="
             width: 100vw;
             height: 400rpx;
             display: flex;
@@ -112,16 +73,9 @@
             justify-content: center;
             flex-direction: column;
             padding-top: 24rpx;
-          "
-        >
-          <textarea
-            v-model="data.contnet"
-            name=""
-            id=""
-            cols="30"
-            rows="10"
-            style="background-color: #eee; width: 90%; padding: 20rpx"
-          ></textarea>
+          ">
+          <textarea v-model="data.contnet" name="" id="" cols="30" rows="10"
+            style="background-color: #eee; width: 90%; padding: 20rpx"></textarea>
           <view style="width: 90%; margin-top: 20rpx">
             <up-button @click="sendMark" type="primary" text="发送"></up-button>
           </view>
@@ -132,23 +86,14 @@
 
       <view class="input_box">
         <view @click="options.pop_flag = true"></view>
-        <text
-          style="font-size: 56rpx"
-          v-if="data.isLike"
-          class="iconfont icon-love"
-          @click="downLike"
-        ></text>
-        <text
-          style="color: #ccc; font-size: 56rpx"
-          v-else
-          class="iconfont icon-love"
-          @click="onLike"
-        ></text>
+        <text style="font-size: 56rpx" v-if="data.isLike" class="iconfont icon-love" @click="downLike"></text>
+        <text style="color: #ccc; font-size: 56rpx" v-else class="iconfont icon-love" @click="onLike"></text>
       </view>
     </scroll-view>
   </view>
 </template>
 <script setup lang='ts'>
+
 import { differTime } from "@/utils/times"
 import type { goodsDetail } from "../../types/square"
 import { onLoad } from "@dcloudio/uni-app"
@@ -159,6 +104,7 @@ import {
   reqGetUserLikes,
   reqDelLike,
   reqGoodsStep,
+  reqDelGoods
 } from "../../api/square"
 import { reqAddFriend, reqFriendDel, reqFriendList } from "../../api/user"
 import { ref, onMounted, reactive } from "vue"
@@ -182,7 +128,7 @@ const data = reactive<{
   isLike: false,
   isFriend: false,
 })
-
+const { safeAreaInsets } = uni.getSystemInfoSync()
 // onMounted(() => {
 // getInfo()
 // addStep()
@@ -192,6 +138,29 @@ const data = reactive<{
 
 const test = () => {
   console.log(data.info)
+}
+
+const handleDel = async (id: number) => {
+  if (data.info.user?.id !== userStore.UInfo?.id) return
+  uni.showModal({
+    title: "提示",
+    content: `确定删除发布吗？`,
+    success: async (res) => {
+      if (res.confirm) {
+        const result = await reqDelGoods({ id })
+        if (result.code == 200) {
+          uni.switchTab({
+            url: `/pages/square/index`,
+          })
+          uni.showToast({
+            title: "删除成功",
+            icon: "success",
+            duration: 2000,
+          })
+        }
+      }
+    },
+  })
 }
 
 const addFriend = async () => {
@@ -252,7 +221,6 @@ const getUserLikes = async () => {
   if (res.data.length === 0) data.isLike = false
   if (res.code == 200) {
     const isLike = res.data.find((item: any) => item.goods.id == data.articl_id)
-    console.log("555145", isLike)
     if (isLike) {
       data.isLike = true
     } else {

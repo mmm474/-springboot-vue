@@ -1,65 +1,33 @@
 
 <template>
   <view class="container">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-      >首页</view
-    >
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">首页</view>
     <!-- 搜索区域 -->
-    <view
-      class="search-container"
-      :style="{ paddingTop: safeAreaInsets?.top + 'px' }"
-    >
+    <view class="search-container" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
       <view class="search-box">
-        <text
-          class="iconfont icon-sousuo"
-          style="font-size: 32rpx; color: #999"
-        ></text>
-        <input
-          type="text"
-          v-model="searchText"
-          placeholder="搜索商品名称"
-          placeholder-class="placeholder"
-          @change="handleSearch"
-        />
+        <text class="iconfont icon-sousuo" style="font-size: 32rpx; color: #999"></text>
+        <input type="text" v-model="searchText" placeholder="搜索商品名称" placeholder-class="placeholder"
+          @change="handleSearch" />
       </view>
     </view>
 
     <!-- 分类Tab -->
     <view class="tab-container">
-      <view
-        v-for="(item, index) in categorieOptions"
-        :key="index"
-        class="tab-item"
-        :class="{ active: currentTab === item.value }"
-        @tap="switchTab(item.value)"
-      >
+      <view v-for="(item, index) in categorieOptions" :key="index" class="tab-item"
+        :class="{ active: currentTab === item.value }" @tap="switchTab(item.value)">
         <view class="tab-icon">
-          <text
-            :style="{ color: currentTab === item.value ? '#1976D2' : '#666' }"
-            style="font-size: 24px"
-            :class="item.icon"
-          ></text>
+          <text :style="{ color: currentTab === item.value ? '#1976D2' : '#666' }" style="font-size: 24px"
+            :class="item.icon"></text>
         </view>
         <text class="tab-text">{{ item.label }}</text>
       </view>
     </view>
 
     <!-- 商品列表 -->
-    <scroll-view
-      class="goods-list"
-      scroll-y
-      @scrolltolower="loadMore"
-      @refresherrefresh="refresh"
-      refresher-enabled
-      :refresher-triggered="isRefreshing"
-    >
-      <view
-        v-if="data.list.length > 0"
-        v-for="(item, index) in data.list"
-        :key="index"
-        class="goods-item"
-        @tap="goToDetail(item.id)"
-      >
+    <scroll-view class="goods-list" scroll-y @scrolltolower="loadMore" @refresherrefresh="refresh" refresher-enabled
+      :refresher-triggered="isRefreshing">
+      <view v-if="data.list.length > 0" v-for="(item, index) in data.list" :key="index" class="goods-item"
+        @tap="goToDetail(item.id)">
         <image class="goods-image" :src="item.cover" mode="aspectFill"></image>
         <view class="goods-info">
           <text class="goods-title">{{ item.title }}</text>
@@ -104,19 +72,10 @@ const getList = async () => {
     pageSize: 10,
     categorie: parseInt(currentTab.value),
   })
-  let dlist
-  if (res.data.length > 0) {
-    dlist = res.data.map((i) => ({
-      ...i,
-      cover: i.images ? i.images.split(",")[0] : "",
-    }))
-  } else {
-    if (page.value === 1) {
-      return
-    }
-    page.value--
-  }
-  data.list = [...data.list, ...(dlist || [])]
+  data.list = res.data.map((i) => ({
+    ...i,
+    cover: i.images ? i.images.split(",")[0] : "",
+  }))
 }
 
 const differTime = (time: string) => {

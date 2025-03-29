@@ -13,7 +13,8 @@ enum API {
   "GET_USER_GOODS" = "/goods/userlist",
   "GOODS_STEP" = "/goods/addhistory",
   "GET_USER_STEP" = "/goods/gethistory",
-  "SEARCH_GOOD" = "/goods/search"
+  "SEARCH_GOOD" = "/goods/search",
+  "DEL_GOODS" = "/goods/delete"
 }
 
 
@@ -53,3 +54,5 @@ export const reqGetUserGoods = (data: { id?: number | null | undefined }) => req
 export const reqGoodsStep = (data: { id: number }) => request<any>({ method: "POST", url: API.GOODS_STEP, data })
 
 export const reqGetUserStep = () => request<any>({ method: "GET", url: API.GET_USER_STEP })
+
+export const reqDelGoods = (data: { id: number }) => request<any>({ method: "POST", url: API.DEL_GOODS, data })

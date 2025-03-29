@@ -1,28 +1,15 @@
 <template>
   <view class="container">
-    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }"
-      >社区广场</view
-    >
+    <view class="title_box" :style="{ marginTop: safeAreaInsets?.top + 'px' }">社区广场</view>
     <view class="list" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
-      <scroll-view
-        class="list-container"
-        scroll-y
-        @scrolltolower="loadMore"
-        @refresherrefresh="refresh"
-        refresher-enabled
-        :refresher-triggered="isRefreshing"
-      >
+      <view class="list-container">
         <view class="item" v-for="item in data.list" :key="item.id">
           <view class="top_box">
-            <image
-              mode="widthFix"
-              :src="
-                item.user.avatar ? item.user.avatar : '../../static/avatar.png'
-              "
-            />
+            <image :src="item.user.avatar ? item.user.avatar : ''
+              " />
             <view class="des">
               <text>{{
-                item.user.nickname ? item.user.nickname : "用户" + item.user.id
+                item.user.nickname
               }}</text>
               <text>{{ differTime(item.created_at) }}</text>
             </view>
@@ -33,34 +20,20 @@
               item.descr
             }}</view>
             <view class="img_box">
-              <image
-                @click="preview($event, item.images ? item.images : [], index)"
-                v-for="(i, index) in item.images"
-                :key="index"
-                :src="i"
-                mode="scaleToFill"
-              />
+              <image @click="preview($event, item.images ? item.images : [], index)" v-for="(i, index) in item.images"
+                :key="index" :src="i" mode="scaleToFill" />
             </view>
           </view>
           <view class="bot_box">
-            <text class="iconfont icon-share"
-              >&nbsp;<text style="font-size: 30rpx">分享</text></text
-            >
-            <text @click="goDetail(item.id)" class="iconfont icon-pinglun"
-              >&nbsp;<text style="font-size: 30rpx"
-                >评论{{
-                  item.remarks.length > 0 ? "&nbsp;" + item.remarks.length : ""
-                }}</text
-              ></text
-            >
-            <text class="iconfont icon-shoucang"
-              >&nbsp;<text style="font-size: 30rpx"
-                >收藏{{ item.likes > 0 ? "&nbsp;" + item.likes : "" }}</text
-              ></text
-            >
+            <text class="iconfont icon-share">&nbsp;<text style="font-size: 30rpx">分享</text></text>
+            <text @click="goDetail(item.id)" class="iconfont icon-pinglun">&nbsp;<text style="font-size: 30rpx">评论{{
+              item.remarks.length > 0 ? "&nbsp;" + item.remarks.length : ""
+            }}</text></text>
+            <text class="iconfont icon-shoucang">&nbsp;<text style="font-size: 30rpx">收藏{{ item.likes > 0 ? "&nbsp;" +
+              item.likes : "" }}</text></text>
           </view>
         </view>
-      </scroll-view>
+      </view>
     </view>
 
     <!-- 发布按钮 -->
@@ -88,7 +61,7 @@ const options = reactive({
 const data = reactive<{ list: goodsDetail[] }>({
   list: [],
 })
-onMounted(() => {
+onShow(() => {
   getList()
 })
 
@@ -111,19 +84,23 @@ const refresh = () => {
 const getList = async () => {
   const res = await getSquareList(options)
   if (res.code === 200) {
-    let dlist
-    if (res.data.length > 0) {
-      dlist = res.data.map((i) => ({
-        ...i,
-        images: i.images ? i.images.split(",") : [],
-      }))
-    } else {
-      if (options.page === 1) {
-        return
-      }
-      options.page--
-    }
-    data.list = [...data.list, ...(dlist || [])]
+    // let dlist
+    // if (res.data.length > 0) {
+    //   dlist = res.data.map((i) => ({
+    //     ...i,
+    //     images: i.images ? i.images.split(",") : [],
+    //   }))
+    // } else {
+    //   if (options.page === 1) {
+    //     return
+    //   }
+    //   options.page--
+    // }
+    // data.list = [...data.list, ...(dlist || [])]
+    data.list = res.data.map((i) => ({
+      ...i,
+      images: i.images ? i.images.split(",") : [],
+    }))
   }
 }
 
@@ -180,7 +157,7 @@ const goShare = () => {
   }
 
   .list {
-    padding-top: 12rpx;
+
     height: 100%;
     overflow: hidden;
     // margin-top: 70rpx;
@@ -188,12 +165,12 @@ const goShare = () => {
     // height: 2000rpx;
 
     .list-container {
-      flex: 1;
-      overflow: auto;
-      padding: 20rpx;
-
+      // flex: 1;
+      // // overflow: auto;
+      // padding: 20rpx;
+      padding-top: 45rpx;
       height: 100%;
-      // overflow: scroll;
+      overflow: scroll;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -207,6 +184,7 @@ const goShare = () => {
       margin-bottom: 20rpx;
 
       .top_box {
+        padding-top: 24rpx;
         width: 100%;
         height: 120rpx;
         display: flex;

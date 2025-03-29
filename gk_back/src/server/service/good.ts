@@ -28,6 +28,20 @@ class GoodsService {
     }
   }
 
+  async delGoods(goodsId: number) {
+    const goods = await AppDataSource.getRepository(Goods).findOneBy({ id: goodsId });
+    if (!goods) {
+      throw new Error('商品不存在');
+    }
+    await AppDataSource.getRepository(Goods).remove(goods);
+    return {
+      code: 200,
+      msg: '删除成功',
+      success: true,
+      data: null
+    }
+  }
+
   async getGoodsList(page: number, pageSize: number) {
     const goodsList = await AppDataSource.getRepository(Goods).find({
       take: pageSize,
