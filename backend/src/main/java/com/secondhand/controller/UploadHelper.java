@@ -40,7 +40,7 @@ public class UploadHelper {
             String scheme = request.getScheme();
             String serverName = request.getServerName();
             int serverPort = request.getServerPort();
-            return scheme + "://" + serverName + ":" + serverPort + "/static/image/" + fileName;
+            return scheme + "://" + serverName + ":" + serverPort + "/api/static/image/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("文件保存失败: " + e.getMessage(), e);
         }

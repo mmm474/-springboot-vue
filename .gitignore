@@ -1,2 +1,30 @@
-*/node_modules/
-*/dist/
+# ===== 前端 =====
+node_modules/
+dist/
+dist-ssr/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== Java / Maven / Spring Boot =====
+target/
+*.class
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# ===== 运行时上传文件 =====
+backend/uploads/
+
+# ===== 日志 =====
+*.log
+logs/
+
+# ===== IDE / 系统 =====
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
