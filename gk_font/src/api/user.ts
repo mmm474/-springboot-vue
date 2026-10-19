@@ -1,5 +1,5 @@
-import { request, upload } from "@/utils/http";
-import type { regRequestForm, loginRequestForm, loginResponseForm, getUserInfoForm, upInfoRequestForm, reponseForm, upInfoResponseForm } from "@/types/user"
+﻿import { request, upload } from "@/utils/http";
+import type { regRequestForm, loginRequestForm, loginResponseForm, getUserInfoForm, upInfoRequestForm, responseForm, upInfoResponseForm } from "@/types/user"
 enum API {
   "USER_REG" = "/user/register",
   "USER_LOGIN" = "/user/login",
@@ -14,7 +14,7 @@ enum API {
 
 }
 // 注册
-export const reqUserReg = (data: regRequestForm) => request<reponseForm>({ method: "POST", url: API.USER_REG, data })
+export const reqUserReg = (data: regRequestForm) => request<responseForm>({ method: "POST", url: API.USER_REG, data })
 
 //登录
 export const reqUserLogin = (data: loginRequestForm) => request<loginResponseForm>({ method: "POST", url: API.USER_LOGIN, data })
@@ -23,7 +23,7 @@ export const reqUserLogin = (data: loginRequestForm) => request<loginResponseFor
 export const reqUserInfo = () => request<getUserInfoForm>({ method: "GET", url: API.USER_INFO })
 
 // 退出登录
-export const reqLogout = () => request<reponseForm>({ method: "GET", url: API.USER_OUT })
+export const reqLogout = () => request<responseForm>({ method: "GET", url: API.USER_OUT })
 
 
 // 更新用户信息
@@ -44,14 +44,14 @@ export const reqUpInfo = (data: upInfoRequestForm, filePath?: string,) => {
 export const reqGetCode = () => request<string>({ method: "GET", url: API.GET_CODE })
 
 // 校验验证码
-export const reqCheckCode = (data: { code: string }) => request<reponseForm>({ method: "POST", url: API.CHECK_CODE, data })
+export const reqCheckCode = (data: { code: string }) => request<responseForm>({ method: "POST", url: API.CHECK_CODE, data })
 
 // 添加好友
-export const reqAddFriend = (data: { friendId: string }) => request<reponseForm>({ method: "POST", url: API.ADD_FRIEND, data })
+export const reqAddFriend = (data: { friendId: string }) => request<responseForm>({ method: "POST", url: API.ADD_FRIEND, data })
 
 // 获取好友列表
 export const reqFriendList = () => request<any[]>({ method: "GET", url: API.FRIEND_LIST })
 
 // 删除好友
-export const reqFriendDel = (data: { friendId: string }) => request<reponseForm>({ method: "POST", url: API.FRIEND_DEL, data })
+export const reqFriendDel = (data: { friendId: string }) => request<responseForm>({ method: "POST", url: API.FRIEND_DEL, data })
 

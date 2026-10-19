@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 
-import { ref, computed, reactive, onMounted, watch } from "vue"
+import { ref, reactive, onMounted, watch } from "vue"
 import { reqFriendDel, reqFriendList } from "../../api/user"
 import type { Uinfo } from "../../types/user"
 
@@ -46,6 +46,7 @@ interface Friend {
 }
 
 const searchText = ref("")
+const originList = ref<Friend[]>([])
 
 let data = reactive<{ list: Friend[] }>({
   list: [],
@@ -58,17 +59,18 @@ onMounted(() => {
 const getList = async () => {
   const res = await reqFriendList()
   if (res.code === 200) {
+    originList.value = res.data
     data.list = res.data
   }
 }
 
 watch(searchText, (newVal) => {
   if (newVal) {
-    data.list = data.list.filter((friend) =>
-      friend.nickname.toLowerCase().includes(newVal.toLowerCase())
+    data.list = originList.value.filter((friend) =>
+      friend.nickname?.toLowerCase().includes(newVal.toLowerCase())
     )
   } else {
-    getList()
+    data.list = originList.value
   }
 })
 

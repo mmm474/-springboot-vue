@@ -21,7 +21,7 @@
             }}</view>
             <view class="img_box">
               <image @click="preview($event, item.images ? item.images : [], index)" v-for="(i, index) in item.images"
-                :key="index" :src="i" mode="scaleToFill" />
+                :key="index" :src="i" />
             </view>
           </view>
           <view class="bot_box">
@@ -227,7 +227,7 @@ const goShare = () => {
 
           image {
             width: 100%;
-            object-fit: fill;
+            object-fit: contain;
           }
         }
 

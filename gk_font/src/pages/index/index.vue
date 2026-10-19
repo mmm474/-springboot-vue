@@ -46,7 +46,7 @@ import { getSquareListByCategorie, reqSearchGood } from "@/api/square"
 import { ref, computed, reactive, onMounted } from "vue"
 const { safeAreaInsets } = uni.getSystemInfoSync()
 const searchText = ref("")
-const currentTab = ref("0")
+const currentTab = ref("")
 const isRefreshing = ref(false)
 let timer: any = null
 
@@ -56,10 +56,12 @@ const data = reactive<{ list: any[] }>({
 const page = ref(1)
 
 const categorieOptions = reactive([
-  { label: "生活", value: "0", icon: "iconfont icon-Home" },
-  { label: "学习", value: "1", icon: "iconfont icon-fenlei" },
-  { label: "娱乐", value: "2", icon: "iconfont icon-shoucang" },
-  { label: "其他", value: "3", icon: "iconfont icon-igw-l-more" },
+  { label: "全部", value: "", icon: "iconfont icon-Home" },
+  { label: "数码", value: "数码", icon: "iconfont icon-fenlei" },
+  { label: "图书", value: "图书", icon: "iconfont icon-shoucang" },
+  { label: "家居", value: "家居", icon: "iconfont icon-igw-l-more" },
+  { label: "服饰", value: "服饰", icon: "iconfont icon-Home" },
+  { label: "运动", value: "运动", icon: "iconfont icon-fenlei" },
 ])
 
 onMounted(() => {
@@ -70,7 +72,8 @@ const getList = async () => {
   const res = await getSquareListByCategorie({
     page: page.value,
     pageSize: 10,
-    categorie: parseInt(currentTab.value),
+    // @ts-ignore value 是字符串分类名（"数码"/"图书"/...），空字符串表示全部
+    categorie: currentTab.value,
   })
   data.list = res.data.map((i) => ({
     ...i,
@@ -121,8 +124,8 @@ const handleSearch = () => {
 
 const loadMore = () => {
   // 加载更多逻辑
-  page.value++
-  getList()
+  // page.value++
+  // getList()
 }
 
 const refresh = () => {

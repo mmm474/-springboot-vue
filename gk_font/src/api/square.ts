@@ -1,9 +1,10 @@
-import type { SquareList, goodsDetail, reqAddGoodsItem, resRemarkData, upImgResponse } from "@/types/square";
+import type { SquareList, goodsDetail, reqAddGoodsItem, resRemarkData, upImgResponse, upImgsResponse } from "@/types/square";
 import { request, upload } from "@/utils/http";
 enum API {
   "GET_LIST" = '/goods/list',
   "GET_LIST_BY_CAS" = "/goods/getListByCategorie",
   "UP_IMG" = '/tools/upload',
+  "UP_IMGS" = '/tools/uploadMulti',
   "ADD_GOODS" = '/goods/publish',
   "GET_DETAIL" = "/goods/detail",
   "UP_REMARK" = "/goods/upremark",
@@ -24,13 +25,20 @@ export const getSquareList = ({ page, pageSize }: { page: number, pageSize: numb
 
 
 // 获取分类列表
-export const getSquareListByCategorie = ({ page, pageSize, categorie }: { page: number, pageSize: number, categorie: number }) => request<SquareList[]>({ method: "GET", url: API.GET_LIST_BY_CAS, data: { page, pageSize, categorie } })
+export const getSquareListByCategorie = ({ page, pageSize, categorie }: { page: number, pageSize: number, categorie: string }) => request<SquareList[]>({ method: "GET", url: API.GET_LIST_BY_CAS, data: { page, pageSize, categorie } })
 
-// 上传图片
+// 上传图片（单图，字段名 file）
 export const reqUploadImages = (filePath?: string) => upload<upImgResponse>({
   // @ts-ignore
   method: 'POST', url: API.UP_IMG, filePath: filePath, name: 'file'
 })
+
+// 上传多图（一次多文件，字段名 files；前端调用：Promise.all 传入 filePaths 数组并逐个并发调用 reqUploadImages，H5 端直接用 FormData 多文件可调用此接口）
+export const reqUploadMulti = (filePaths: string[]) =>
+  Promise.all(filePaths.map((p) => reqUploadImages(p))).then((list) => ({
+    urls: list.map((i) => i.data.url),
+    count: list.length,
+  } as upImgsResponse))
 
 
 // 搜索商品

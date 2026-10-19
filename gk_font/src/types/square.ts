@@ -39,6 +39,11 @@ export interface upImgResponse {
   url: string
 }
 
+export interface upImgsResponse {
+  urls: string[]
+  count: number
+}
+
 export interface reqAddGoodsItem {
   title: string;
   price: number;

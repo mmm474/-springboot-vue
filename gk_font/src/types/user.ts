@@ -76,18 +76,18 @@ export type userInfo = {
   exp: number
 }
 
-export interface upInfoResponseForm extends reponseForm {
+export interface upInfoResponseForm extends responseForm {
   token: string
   userInfo: userInfo,
   message: string,
-  succes: boolean,
+  success: boolean,
   code: number
 }
 // 一般返回类
-export interface reponseForm {
+export interface responseForm {
   msg: string,
   data: {},
-  succes: boolean,
+  success: boolean,
   code: number
 }
 

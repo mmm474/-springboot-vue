@@ -1,5 +1,5 @@
-export const setToken = async (value: string) => {
-  await uni.setStorageSync("token", value)
+﻿export const setToken = (value: string) => {
+  uni.setStorageSync("token", value)
 }
 
 export const getToken = () => {

@@ -1,4 +1,4 @@
-import useUserStore from "@/store/module/user"
+﻿import useUserStore from "@/store/module/user"
 import { removeToken } from "./token"
 import { removeInfo } from "./info"
 
@@ -9,7 +9,7 @@ const baseUrl = "/api"
 const httpInterceptor = {
   invoke(options: UniApp.RequestOptions) {
     // 如果已经是完整路径
-    if (!options.url.startsWith("httP")) {
+    if (!options.url.startsWith("http")) {
       options.url = baseUrl + options.url
     }
     // 请求超时时间

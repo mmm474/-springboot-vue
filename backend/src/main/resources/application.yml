@@ -1,0 +1,40 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: second-hand-trading-backend
+  datasource:
+    url: jdbc:mysql://localhost:3306/second_trade?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: "123456"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 50MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+# 自定义配置
+app:
+  jwt:
+    secret: secret_key
+    expire: 86400000   # 24 小时（毫秒）
+  upload:
+    # 上传文件存储根目录（相对项目运行目录）
+    path: src/static
+    # 对外访问的 URL 前缀
+    url-prefix: /static
