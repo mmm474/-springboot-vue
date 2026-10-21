@@ -36,9 +36,9 @@ public class GoodsService {
         Goods goods = new Goods();
         goods.setTitle(title);
         goods.setPrice(price);
-        goods.setDescr(descr);
-        goods.setCategorie(categorie);
-        goods.setImages(images);
+        goods.setDescr(descr == null ? "" : descr);
+        goods.setCategorie(categorie == null ? "" : categorie);
+        goods.setImages(images == null ? "" : images);
         goods.setUser(user);
         goods.setLikes(0);
         goods.setCreatedAt(new Date());

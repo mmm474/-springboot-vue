@@ -32,7 +32,13 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setUserCode("");
+        user.setRole(0);
         user.setNickname("用户" + new Random().nextInt(1000));
+        user.setAvatar("");
+        user.setPhone("");
+        user.setSex(0);
+        user.setDescribes("");
         user.setCreatedAt(new Date());
         userRepository.save(user);
         return Result.success("注册成功");
